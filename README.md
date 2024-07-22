@@ -21,6 +21,7 @@ Maurício Serrano.
 
 * [DER](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DER/DERv6-Final.png)
 * [Mapeamento](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Mapeamento/mapeamento_final.png)
+* [Dicionário de Dados](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DicionarioDados-EldenRing.pdf)
 * [Apresentação](https://youtu.be/X5gtIR1n0aY)
 #### Ferramentas Utilizadas:
 
