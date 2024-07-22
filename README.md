@@ -1,15 +1,37 @@
-<h1 align="center">Elden Ring</h1>
+<h1 align="center">⚜️ Elden Ring ⚜️</h1>
 
 <div align="center">
   Rise, Tarnished.
-<div align="center"><img src= "https://steamuserimages-a.akamaihd.net/ugc/1733304891307863379/D50BF6A18429FC2256AE54BE9DF9CC94BCEB08CB/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true" height="500" width="auto"/></div>
+  
+![elden](https://github.com/user-attachments/assets/0476e059-be64-4f14-8dd8-413f8670187f)
 </div>
-
 ___
+
+## 🕹 Sobre o Jogo
 Elden Ring é um jogo eletrônico de RPG de ação, jogado de uma perspectiva em terceira pessoa e apresenta elementos semelhantes aos encontrados em seus antecessores, a série Souls, com uma jogabilidade focada em combate e exploração. Os jogadores começam em um ambiente linear, mas eventualmente progridem para explorar livremente as Terras Intermédias, incluindo suas seis áreas principais, bem como castelos, fortalezas e catacumbas espalhadas pelo vasto mapa de mundo aberto. Essas áreas principais são interconectadas através de um ponto central no qual os jogadores podem acessar mais tarde conforme progridem no jogo e serão exploráveis ​​usando a montaria do personagem como o principal meio de transporte, embora um sistema de viagem rápida seja uma opção disponível. Ao longo do jogo, os jogadores encontram personagens não-jogáveis (NPCs) e inimigos, incluindo os semideuses que governam cada área principal e servirão como os chefes principais do jogo.
 ___
 
-## Contribuidores
+## Objetivo
+
+Esse trabalho tem por objetivo reproduzir a lógica do banco de dados do jogo Elden Ring para a matéria de Sistema de Banco de Dados da Universidade de Brasília, ministrada pelo professor 
+Maurício Serrano.
+
+## Entregas
+### 1ª Entrega 
+
+* [DER](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DER/DERv6-Final.png)
+* [Mapeamento](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Mapeamento/mapeamento_final.png)
+* [Apresentação](https://youtu.be/X5gtIR1n0aY)
+#### Ferramentas Utilizadas:
+
+<div style="display:flex;">
+  <img src="https://github.com/user-attachments/assets/2e834e79-9d7c-45dc-9ea6-f93579a7e6fc" alt="images__1_-removebg-preview" style="width:10%; height:auto;">
+
+<!--[![My Skills](https://skillicons.dev/icons?i=&theme=light)](https://skillicons.dev) -->
+  
+</div>
+
+## 👾👾👾 Contribuidores
 
 <div align="center">
 <table style="margin-left: auto; margin-right: auto;">
@@ -44,4 +66,4 @@ ___
         </td>
     </tr>
 </table>
-</div>
+
