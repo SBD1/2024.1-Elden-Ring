@@ -11,12 +11,12 @@ ___
 Elden Ring é um jogo eletrônico de RPG de ação, jogado de uma perspectiva em terceira pessoa e apresenta elementos semelhantes aos encontrados em seus antecessores, a série Souls, com uma jogabilidade focada em combate e exploração. Os jogadores começam em um ambiente linear, mas eventualmente progridem para explorar livremente as Terras Intermédias, incluindo suas seis áreas principais, bem como castelos, fortalezas e catacumbas espalhadas pelo vasto mapa de mundo aberto. Essas áreas principais são interconectadas através de um ponto central no qual os jogadores podem acessar mais tarde conforme progridem no jogo e serão exploráveis ​​usando a montaria do personagem como o principal meio de transporte, embora um sistema de viagem rápida seja uma opção disponível. Ao longo do jogo, os jogadores encontram personagens não-jogáveis (NPCs) e inimigos, incluindo os semideuses que governam cada área principal e servirão como os chefes principais do jogo.
 ___
 
-## Objetivo
+## 📜 Objetivo
 
 Esse trabalho tem por objetivo reproduzir a lógica do banco de dados do jogo Elden Ring para a matéria de Sistema de Banco de Dados da Universidade de Brasília, ministrada pelo professor 
 Maurício Serrano.
 
-## Entregas
+## 💎 Entregas
 ### 1ª Entrega 
 
 * [DER](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DER/DERv6-Final.png)
@@ -31,7 +31,7 @@ Maurício Serrano.
   
 </div>
 
-## 👾👾👾 Contribuidores
+## 👾 Contribuidores
 
 <div align="center">
 <table style="margin-left: auto; margin-right: auto;">
