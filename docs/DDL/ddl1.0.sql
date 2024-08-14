@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS arma_leve (
 
 CREATE TABLE IF NOT EXISTS cajado (
     id_cajado INTEGER PRIMARY KEY REFERENCES arma(id_arma),
-    proficiencia tipo_proeficiencia not null,
+    proficiencia tipo_proeficiencia not null
 );
 
 CREATE TABLE IF NOT EXISTS selo (
