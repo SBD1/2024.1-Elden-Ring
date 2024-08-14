@@ -17,46 +17,35 @@ CREATE TABLE IF NOT EXISTS personagem (
     CONSTRAINT chk_hp CHECK (hp >= 1)
 );
 
+CREATE TABLE IF NOT EXISTS funcao_npc (
+    id_npc INTEGER,
+    funcao funcao_p,
+    PRIMARY KEY(id_npc, funcao)
+);
+
 CREATE TABLE IF NOT EXISTS npc (
     id_npc INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
-    nome VARCHAR(25) NOT NULL,
-    hp INTEGER NOT NULL,
-    funcao funcao_p NOT NULL,
+    funcao funcao_p UNIQUE NOT NULL,
     esta_hostil BOOLEAN NOT NULL,
     resistencia INTEGER NOT NULL,
     fraquezas tipo_atk,
     drop_runas INTEGER NOT NULL,
-    CONSTRAINT chk_hp_npc CHECK (hp >= 1),
-    CONSTRAINT chk_drop_runas CHECK (drop_runas >= 0)
+    CONSTRAINT chk_drop_runas CHECK (drop_runas >= 0),
+    CONSTRAINT fk_npc FOREIGN KEY(id_npc) REFERENCES funcao_npc(id_npc),
+    CONSTRAINT fk_func FOREIGN KEY(funcao) REFERENCES funcao_npc(funcao)
 );
 
 CREATE TABLE IF NOT EXISTS inimigo(
     id_inimigo INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
-    esta_hostil BOOLEAN NOT NULL,
-    resistencia INTEGER NOT NULL,
-    fraquezas tipo_atk NOT NULL,
-    drop_runas INTEGER NOT NULL,
     dano_base INTEGER NOT NULL,
-    nome VARCHAR(25) NOT NULL,
-    hp INTEGER NOT NULL,
-    CONSTRAINT chk_hp_inimigo CHECK (hp >= 0),
-    CONSTRAINT chk_drop_runas_inimigo CHECK (drop_runas >= 0),
     CONSTRAINT chk_dano_base CHECK (dano_base >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS chefe(
     id_chefe INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
-    nome VARCHAR(25) NOT NULL,
-    hp INTEGER NOT NULL,
-    esta_hostil BOOLEAN NOT NULL,
-    resistencia INTEGER NOT NULL,
-    fraquezas tipo_atk NOT NULL,
-    drop_runas INTEGER NOT NULL,
     dano_base INTEGER NOT NULL,
     lembranca VARCHAR(25) NOT NULL,
     desperate_move INTEGER NOT NULL,
-    CONSTRAINT chk_hp_chefe CHECK (hp >= 0),
-    CONSTRAINT chk_drop_runas_chefe CHECK (drop_runas >= 0),
     CONSTRAINT chk_dano_base_chefe CHECK (dano_base >= 0)
 );
 
@@ -72,22 +61,7 @@ CREATE TABLE IF NOT EXISTS area(
 );
 
 CREATE TABLE IF NOT EXISTS ferreiro(
-    id_ferreiro INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
-    nome VARCHAR(25) NOT NULL,
-    hp INTEGER NOT NULL,
-    esta_hostil BOOLEAN NOT NULL,
-    resistencia INTEGER NOT NULL,
-    drop_runas INTEGER NOT NULL,
-    CONSTRAINT chk_hp_ferreiro CHECK (hp >= 1),
-    CONSTRAINT chk_drop_runas_ferreiro CHECK (drop_runas >= 0)
-);
-
-CREATE TABLE IF NOT EXISTS area_de_morte(
-    id_area_de_morte INTEGER PRIMARY KEY,
-    id_jogador INTEGER REFERENCES personagem(id_personagem),
-    id_area INTEGER REFERENCES area(id_area),
-    runas_dropadas INTEGER NOT NULL,
-    CONSTRAINT chk_runas_dropadas CHECK (runas_dropadas >= 0)
+    id_ferreiro INTEGER PRIMARY KEY REFERENCES personagem(id_personagem)
 );
 
 CREATE TABLE IF NOT EXISTS classe(
@@ -115,7 +89,7 @@ CREATE TABLE IF NOT EXISTS nivel(
 );
 
 CREATE TABLE IF NOT EXISTS jogador(
-    id_jogador INTEGER PRIMARY KEY,
+    id_jogador INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
     id_nivel INTEGER REFERENCES nivel(id_nivel),
     id_classe VARCHAR(14) REFERENCES classe(nome),
     id_area INTEGER REFERENCES area(id_area),
@@ -139,6 +113,14 @@ CREATE TABLE IF NOT EXISTS jogador(
     CONSTRAINT chk_peso_max CHECK (peso_max >= 1),
     CONSTRAINT chk_mp CHECK (mp >= 1),
     CONSTRAINT chk_stamina CHECK (stamina >= 1)
+);
+
+CREATE TABLE IF NOT EXISTS area_de_morte(
+    id_area_de_morte INTEGER PRIMARY KEY,
+    id_jogador INTEGER REFERENCES jogador(id_jogador),
+    id_area INTEGER REFERENCES area(id_area),
+    runas_dropadas INTEGER NOT NULL,
+    CONSTRAINT chk_runas_dropadas CHECK (runas_dropadas >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS conecta_area(
@@ -249,4 +231,36 @@ CREATE TABLE IF NOT EXISTS engaste (
     id_engaste SERIAL PRIMARY KEY,
     id_arma INTEGER REFERENCES arma(id_arma),
     atributo_extra INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS equipados (
+    id_jogador INTEGER PRIMARY KEY REFERENCES jogador(id_jogador),
+    mao_direita INTEGER DEFAULT 0 NOT NULL,
+    mao_esquerda INTEGER DEFAULT 0 NOT NULL,
+    elmo INTEGER DEFAULT 0 NOT NULL,
+    peitoral INTEGER DEFAULT 0 NOT NULL,
+    perneiras INTEGER DEFAULT 0 NOT NULL,
+    manoplas INTEGER DEFAULT 0 NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS instancia_npc (
+    id_instancia INTEGER PRIMARY KEY,
+    id_npc INTEGER NOT NULL,
+    id_area INTEGER NOT NULL,
+    CONSTRAINT fk_npc FOREIGN KEY(id_npc) REFERENCES npc(id_npc),
+    CONSTRAINT fk_area FOREIGN KEY(id_area) REFERENCES area(id_area)
+);
+
+CREATE TABLE IF NOT EXISTS dialogo (
+    id_dialogo INTEGER PRIMARY KEY,
+    id_npc INTEGER,
+    texto VARCHAR(300) NOT NULL,
+    e_unico BOOLEAN NOT NULL,
+    CONSTRAINT fk_npc FOREIGN KEY(id_npc) REFERENCES npc(id_npc)
+);
+
+CREATE TABLE IF NOT EXISTS chefes_derrotados (
+    id_chefe INTEGER REFERENCES chefe(id_chefe),
+    id_jogador INTEGER REFERENCES jogador(id_jogador),
+    PRIMARY KEY (id_chefe, id_jogador)
 );
