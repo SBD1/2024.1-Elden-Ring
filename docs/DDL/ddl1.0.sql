@@ -195,20 +195,20 @@ CREATE TABLE IF NOT EXISTS equipamento(
     custo_melhoria INTEGER NOT NULL,
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
-    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1)
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
     CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4)
 );
 
 CREATE TABLE IF NOT EXISTS escudo (
     id_escudo INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
     habilidade INTEGER NOT NULL,
-    defesa INTEGER not null
+    defesa INTEGER not null,
     CONSTRAINT chk_defesa CHECK (defesa >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS armadura (
     id_armadura INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
-    resistencia INTEGER not null
+    resistencia INTEGER not null,
     CONSTRAINT chk_resistencia CHECK (resistencia >= 1)
 
 );
