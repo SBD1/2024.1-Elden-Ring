@@ -4,7 +4,7 @@ CREATE TYPE tipo_atk AS ENUM ('Fogo', 'Raio', 'Magia', 'Cortante', 'Contusao');
 
 CREATE TYPE tipo_p AS ENUM ('Jogavel', 'Njogavel');
 
-create type tipo_equipamento as enum ('Escudo', 'Arma', 'Armaduro');
+create type tipo_equipamento as enum ('Escudo', 'Arma', 'Armadura');
 
 create type tipo_proeficiencia as enum ('E', 'D', 'C', 'B', 'A', 'S');
 
