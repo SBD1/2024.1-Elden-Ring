@@ -14,40 +14,47 @@ CREATE TYPE tipo_efeitos AS ENUM ('RestauraHp', 'AumentaVida', 'AumentaAtaque', 
 
 CREATE TABLE IF NOT EXISTS personagem (
     id_personagem SERIAL PRIMARY KEY,
-    nome VARCHAR(25) NOT NULL,
-    hp INTEGER NOT NULL,
-    tipo tipo_p NOT NULL,
-    CONSTRAINT chk_hp CHECK (hp >= 1)
+    tipo tipo_p NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS funcao_npc (
     id_npc INTEGER,
     funcao funcao_p,
-    PRIMARY KEY(id_npc, funcao)
+    PRIMARY KEY(id_npc, funcao),
+    CONSTRAINT fk_npc_funcao FOREIGN KEY(id_npc) REFERENCES personagem(id_personagem)
 );
 
 CREATE TABLE IF NOT EXISTS npc (
     id_npc INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
-    funcao funcao_p UNIQUE NOT NULL,
+    nome VARCHAR(25) NOT NULL,
+    hp INTEGER NOT NULL,
+    funcao funcao_p NOT NULL,
     esta_hostil BOOLEAN NOT NULL,
     resistencia INTEGER NOT NULL,
     fraquezas tipo_atk,
     drop_runas INTEGER NOT NULL,
+    CONSTRAINT chk_hp CHECK (hp >= 1),
     CONSTRAINT chk_drop_runas CHECK (drop_runas >= 0),
     CONSTRAINT fk_npc_funcao FOREIGN KEY(id_npc, funcao) REFERENCES funcao_npc(id_npc, funcao)
 );
 
 CREATE TABLE IF NOT EXISTS inimigo (
-    id_inimigo INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
+    id_inimigo INTEGER PRIMARY KEY REFERENCES npc(id_npc),
+    nome VARCHAR(25) NOT NULL,
+    hp INTEGER NOT NULL,
     dano_base INTEGER NOT NULL,
+    CONSTRAINT chk_hp CHECK (hp >= 1),
     CONSTRAINT chk_dano_base CHECK (dano_base >= 0)
 );
 
 CREATE TABLE IF NOT EXISTS chefe (
-    id_chefe INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
+    id_chefe INTEGER PRIMARY KEY REFERENCES npc(id_npc),
+    nome VARCHAR(25) NOT NULL,
+    hp INTEGER NOT NULL,
     dano_base INTEGER NOT NULL,
     lembranca VARCHAR(25) NOT NULL,
     desperate_move INTEGER NOT NULL,
+    CONSTRAINT chk_hp CHECK (hp >= 1),
     CONSTRAINT chk_dano_base_chefe CHECK (dano_base >= 0)
 );
 
@@ -63,7 +70,10 @@ CREATE TABLE IF NOT EXISTS area (
 );
 
 CREATE TABLE IF NOT EXISTS ferreiro (
-    id_ferreiro INTEGER PRIMARY KEY REFERENCES personagem(id_personagem)
+    id_ferreiro INTEGER PRIMARY KEY REFERENCES npc(id_npc),
+    nome VARCHAR(25) NOT NULL,
+    hp INTEGER NOT NULL,
+    CONSTRAINT chk_hp CHECK (hp >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS classe (
@@ -92,6 +102,8 @@ CREATE TABLE IF NOT EXISTS nivel (
 
 CREATE TABLE IF NOT EXISTS jogador (
     id_jogador INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
+    nome VARCHAR(25) NOT NULL,
+    hp INTEGER NOT NULL,
     id_nivel INTEGER REFERENCES nivel(id_nivel),
     id_classe VARCHAR(14) REFERENCES classe(nome),
     id_area INTEGER REFERENCES area(id_area),
@@ -105,6 +117,7 @@ CREATE TABLE IF NOT EXISTS jogador (
     stamina INTEGER NOT NULL,
     mp INTEGER NOT NULL,
     nivel_atual INTEGER NOT NULL,
+    CONSTRAINT chk_hp CHECK (hp >= 1),
     CONSTRAINT chk_nivel_atual CHECK (nivel_atual >= 1),
     CONSTRAINT chk_vigor CHECK (vigor >= 1),
     CONSTRAINT chk_vitalidade CHECK (vitalidade >= 1),
@@ -187,7 +200,11 @@ CREATE TABLE IF NOT EXISTS item_inventario (
 -- PARTE DO EQUIPAMENTO
 CREATE TABLE IF NOT EXISTS equipamento (
     id_equipamento INTEGER PRIMARY KEY REFERENCES item(id_item),
-    tipo tipo_equipamento NOT NULL,
+    tipo tipo_equipamento NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS escudo (
+    id_escudo INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
     requisitos INTEGER[],
     melhoria INTEGER NOT NULL,
     peso INTEGER NOT NULL,
@@ -195,11 +212,7 @@ CREATE TABLE IF NOT EXISTS equipamento (
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
     CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4)
-);
-
-CREATE TABLE IF NOT EXISTS escudo (
-    id_escudo INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
+    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     habilidade INTEGER NOT NULL,
     defesa INTEGER NOT NULL,
     CONSTRAINT chk_defesa CHECK (defesa >= 1)
@@ -207,45 +220,81 @@ CREATE TABLE IF NOT EXISTS escudo (
 
 CREATE TABLE IF NOT EXISTS armadura (
     id_armadura INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
+    requisitos INTEGER[],
+    melhoria INTEGER NOT NULL,
+    peso INTEGER NOT NULL,
+    custo_melhoria INTEGER NOT NULL,
+    CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
+    CONSTRAINT chk_peso CHECK (peso >= 0),
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
+    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     resistencia INTEGER NOT NULL,
     CONSTRAINT chk_resistencia CHECK (resistencia >= 1)
 );
 
-CREATE TABLE IF NOT EXISTS arma (
-    id_arma INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
+CREATE TABLE IF NOT EXISTS arma_pesada (
+    id_arma_pesada INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
+    requisitos INTEGER[],
+    melhoria INTEGER NOT NULL,
+    peso INTEGER NOT NULL,
+    custo_melhoria INTEGER NOT NULL,
+    CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
+    CONSTRAINT chk_peso CHECK (peso >= 0),
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
+    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     habilidade INTEGER NOT NULL,
     dano INTEGER NOT NULL,
     critico INTEGER,
     CONSTRAINT chk_dano CHECK (dano >= 1),
-    CONSTRAINT chk_critico CHECK (critico >= 1)
-);
-
-CREATE TABLE IF NOT EXISTS arma_pesada (
-    id_arma_pesada INTEGER PRIMARY KEY REFERENCES arma(id_arma),
+    CONSTRAINT chk_critico CHECK (critico >= 1),
     forca INTEGER NOT NULL,
     CONSTRAINT chk_forca CHECK (forca >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS arma_leve (
-    id_arma_leve INTEGER PRIMARY KEY REFERENCES arma(id_arma),
+    id_arma_leve INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
+    requisitos INTEGER[],
+    melhoria INTEGER NOT NULL,
+    peso INTEGER NOT NULL,
+    custo_melhoria INTEGER NOT NULL,
+    CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
+    CONSTRAINT chk_peso CHECK (peso >= 0),
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
+    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     destreza INTEGER NOT NULL,
     CONSTRAINT chk_destreza CHECK (destreza >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS cajado (
-    id_cajado INTEGER PRIMARY KEY REFERENCES arma(id_arma),
+    id_cajado INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
+    requisitos INTEGER[],
+    melhoria INTEGER NOT NULL,
+    peso INTEGER NOT NULL,
+    custo_melhoria INTEGER NOT NULL,
+    CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
+    CONSTRAINT chk_peso CHECK (peso >= 0),
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
+    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     proficiencia tipo_proeficiencia NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS selo (
-    id_selo INTEGER PRIMARY KEY REFERENCES arma(id_arma),
+    id_selo INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
+    requisitos INTEGER[],
+    melhoria INTEGER NOT NULL,
+    peso INTEGER NOT NULL,
+    custo_melhoria INTEGER NOT NULL,
+    CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
+    CONSTRAINT chk_peso CHECK (peso >= 0),
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
+    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     milagre INTEGER NOT NULL,
     CONSTRAINT chk_milagre CHECK (milagre >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS engaste (
     id_engaste SERIAL PRIMARY KEY,
-    id_arma INTEGER REFERENCES arma(id_arma),
+    id_arma INTEGER REFERENCES equipamento(id_equipamento),
     atributo_extra INTEGER NOT NULL
 );
 
