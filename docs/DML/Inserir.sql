@@ -1,5 +1,5 @@
 
--- item
+-- item (ok)
 -- consumivel
 -- inventario
 -- instancia_de_item
@@ -27,20 +27,22 @@ RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    id_item INTEGER;
+    new_id_item INTEGER;
 BEGIN
     INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
     VALUES (p_eh_chave, p_raridade, p_nome, p_valor, p_tipo_item)
-    RETURNING id_item INTO id_item;
+    RETURNING id_item INTO new_id_item;
 
-    RETURN id_item;
+    RETURN new_id_item;
 END;
 $$;
 
---Smithing Stone
-SELECT add_item(
-    'Pedra de Forja', 2, 200, NULL, false
-) AS id_arma_leve;
+SELECT add_item('Pedra de Forja', 2, 200, NULL, false) AS pedraForja;
+
+SELECT add_item('Grande Runa - 1', 2, null, NULL, true) AS grandeRuna1;
+
+SELECT add_item('Grande Runa - 2', 2, null, NULL, true) AS grandeRuna2;
+
 
 -- ARMA LEVE
 CREATE OR REPLACE FUNCTION add_arma_leve(

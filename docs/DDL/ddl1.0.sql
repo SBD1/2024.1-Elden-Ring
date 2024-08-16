@@ -152,7 +152,7 @@ CREATE TABLE IF NOT EXISTS item (
     	(eh_chave = TRUE AND tipo IS NULL) OR 
     	(eh_chave = FALSE AND tipo IS NOT NULL) or 
     	(eh_chave = FALSE AND tipo is NULL)
-    );
+    )
 );
 
 CREATE TABLE IF NOT EXISTS consumivel (
