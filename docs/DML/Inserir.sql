@@ -1,3 +1,49 @@
+
+-- item
+-- consumivel
+-- inventario
+-- instancia_de_item
+-- item_inventario
+-- equipamento
+-- escudo
+-- armadura
+-- arma (tem que fazer todos tipos de arma para dar ok)
+-- arma_pesada
+-- arma_leve (ok)
+-- cajado
+-- selo
+-- engaste
+-- equipados
+
+-- ITEM
+CREATE OR REPLACE FUNCTION add_item(
+    p_nome VARCHAR,
+    p_raridade INTEGER,
+    p_valor NUMERIC,
+    p_tipo_item tipo_item,
+    p_eh_chave BOOLEAN
+) 
+RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    id_item INTEGER;
+BEGIN
+    INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+    VALUES (p_eh_chave, p_raridade, p_nome, p_valor, p_tipo_item)
+    RETURNING id_item INTO id_item;
+
+    RETURN id_item;
+END;
+$$;
+
+--Smithing Stone
+SELECT add_item(
+    'Rios de Sangue', 5, 1000, 'Equipamento'::tipo_item, 'Arma'::tipo_equipamento,
+    ARRAY[1, 1, 18, 12], 0, 6.5, 8, 90, 76, 100, 18
+) AS id_arma_leve;
+
+-- ARMA LEVE
 CREATE OR REPLACE FUNCTION add_arma_leve(
     p_nome VARCHAR,
     p_raridade INTEGER,

@@ -147,7 +147,11 @@ CREATE TABLE IF NOT EXISTS item (
     raridade INTEGER NOT NULL,
     nome VARCHAR(25) NOT NULL,
     valor INTEGER,
-    tipo tipo_item NOT NULL
+    tipo tipo_item,
+    CHECK (
+    	(eh_chave = TRUE AND tipo IS NULL) OR 
+    	(eh_chave = FALSE AND tipo IS NOT NULL)
+    );
 );
 
 CREATE TABLE IF NOT EXISTS consumivel (
