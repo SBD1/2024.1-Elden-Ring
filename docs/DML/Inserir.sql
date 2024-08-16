@@ -39,8 +39,7 @@ $$;
 
 --Smithing Stone
 SELECT add_item(
-    'Rios de Sangue', 5, 1000, 'Equipamento'::tipo_item, 'Arma'::tipo_equipamento,
-    ARRAY[1, 1, 18, 12], 0, 6.5, 8, 90, 76, 100, 18
+    'Pedra de Forja', 2, 200, NULL, false
 ) AS id_arma_leve;
 
 -- ARMA LEVE
