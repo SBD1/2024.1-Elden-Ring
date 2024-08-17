@@ -1,4 +1,4 @@
--- Aqui em select nós colocamos os updates que possivelmente vamos usar dentro do jogo.
+-- Aqui em select nós que possivelmente vamos usar dentro do jogo.
 
 -- Item
 SELECT * FROM item WHERE id_item = %var%;
@@ -53,24 +53,31 @@ JOIN
 JOIN 
     item i ON e.id_item = i.id_item;
    
--- Inventario acessando
+-- Acessando itens do jogador
 SELECT 
-	inv.id_usuario,
-	inv.quantidade,
-    i.id_item,
-    i.eh_chave,
-    i.raridade,
-    i.nome,
-    i.valor,
-    i.tipo as tipo_item,
-    idi.id_instancia
+    i.id_instancia_item,
+    it.nome AS nome_item
 FROM 
-    inventario inv
+    instancia_de_item i
 JOIN 
-    instancia_de_item idi ON inv.id_item = idi.id_item
+    item it ON i.id_item = it.id_item
 JOIN 
-    item i ON idi.id_item = i.id_item
+    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
 WHERE 
-    inv.id_inventario = %id_jogador%;
+    l.inventario_jogador = %ID_DO_JOGADOR%;
+   
+   
+-- Acessando itens da area
+SELECT 
+    i.id_instancia_item,
+    it.nome AS nome_item
+FROM 
+    instancia_de_item i
+JOIN 
+    item it ON i.id_item = it.id_item
+JOIN 
+    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+WHERE 
+    l.area = %ID_DA_AREA%;
    
 
