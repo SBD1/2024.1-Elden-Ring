@@ -15,7 +15,7 @@
 -- engaste
 -- equipados
 
--- personagem
+-- personagem ok
 -- funcao_npc ok
 -- npc ok
 -- inimigo ok
@@ -33,45 +33,6 @@
 -- dialogo
 -- chefes_derrotados
 
--- NPC
-CREATE OR REPLACE FUNCTION add_npc(
-    p_nome VARCHAR,
-    p_hp INTEGER,
-    p_funcao funcao_p, 
-    p_esta_hostil BOOLEAN,
-    p_resistencia INTEGER,
-    p_fraquezas tipo_atk,
-    p_drop_runas INTEGER
-)
-RETURNS INTEGER 
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    v_id_personagem INTEGER;
-    v_id_npc INTEGER;
-BEGIN INSERT INTO personagem (tipo)
-    VALUES ('Njogavel') 
-    RETURNING id_personagem INTO v_id_personagem;
-
-    INSERT INTO funcao_npc (id_npc, funcao)
-    VALUES (v_id_personagem, p_funcao);
-
-    INSERT INTO npc (
-        id_npc, nome, hp, funcao, esta_hostil, resistencia, fraquezas, drop_runas
-    )
-    VALUES (
-        v_id_personagem, p_nome, p_hp, p_funcao, p_esta_hostil, p_resistencia, p_fraquezas, p_drop_runas
-    )
-    RETURNING id_npc INTO v_id_npc;
-
-    RETURN v_id_npc;
-END;
-$$;
-SELECT add_npc('Mercante Kale', 250, 'Mercador'::funcao_p, FALSE, 20, 'Fogo'::tipo_atk, 300);
-SELECT add_npc('Ferreiro Mestre HEWG', 400, 'Ferreiro'::funcao_p, FALSE, 60, 'Cortante'::tipo_atk, 1000);
-SELECT add_npc('Roderika', 200, 'Campones'::funcao_p, FALSE, 50, 'Raio'::tipo_atk, 350);
-SELECT add_npc('Margit, o Mau Presságio', 2500, 'Chefe'::funcao_p, TRUE, 200, 'Magia'::tipo_atk, 5000);
-
 -- INIMIGO
 CREATE OR REPLACE FUNCTION add_inimigo(
     p_nome_inimigo VARCHAR,
@@ -85,29 +46,40 @@ CREATE OR REPLACE FUNCTION add_inimigo(
     p_fraquezas tipo_atk,
     p_drop_runas INTEGER
 )
-RETURNS INTEGER 
+RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
+    v_id_personagem INTEGER;
     v_id_npc INTEGER;
-BEGIN SELECT id_npc INTO v_id_npc
-    FROM npc
-    WHERE nome = p_nome_npc;
-
-    IF v_id_npc IS NULL THEN INSERT INTO npc (nome, hp, funcao, esta_hostil, resistencia, fraquezas, drop_runas)
-        VALUES (p_nome_npc, p_hp_npc, p_funcao_npc, p_esta_hostil, p_resistencia, p_fraquezas, p_drop_runas)
-        RETURNING id_npc INTO v_id_npc;
-
+    v_id_inimigo INTEGER;
+BEGIN
+	WITH new_personagem AS (
+        INSERT INTO personagem (tipo)
+        VALUES ('Njogavel'::tipo_p)
+        RETURNING id_personagem
+    )
+    , new_funcao_npc AS (
         INSERT INTO funcao_npc (id_npc, funcao)
-        VALUES (v_id_npc, p_funcao_npc);
-    END IF;
-
+        SELECT id_personagem, p_funcao_npc
+        FROM new_personagem
+        RETURNING id_npc
+    )
+    , new_npc AS (
+        INSERT INTO npc (id_npc, nome, hp, funcao, esta_hostil, resistencia, fraquezas, drop_runas)
+        SELECT id_npc, p_nome_npc, p_hp_npc, p_funcao_npc, p_esta_hostil, p_resistencia, p_fraquezas, p_drop_runas
+        FROM new_funcao_npc
+        RETURNING id_npc
+    )
     INSERT INTO inimigo (id_inimigo, nome, hp, dano_base)
-    VALUES (v_id_npc, p_nome_inimigo, p_hp_inimigo, p_dano_base);
+    SELECT id_npc, p_nome_inimigo, p_hp_inimigo, p_dano_base
+    FROM new_npc
+    RETURNING id_inimigo INTO v_id_inimigo;
 
-    RETURN v_id_npc;
+    RETURN v_id_inimigo;
 END;
 $$;
+
 SELECT add_inimigo(
     'Soldado de Godrick', 250, 40, 
     'Soldado de Godrick', 250, 
@@ -127,50 +99,153 @@ SELECT add_inimigo(
 );
 
 -- CHEFE
+
 CREATE OR REPLACE FUNCTION add_chefe(
-    p_nome VARCHAR,
-    p_hp INTEGER,
+    p_nome_chefe VARCHAR,
+    p_hp_chefe INTEGER,
     p_dano_base INTEGER,
     p_lembranca VARCHAR,
-    p_desperate_move INTEGER
-) 
+    p_desperate_move INTEGER,
+    p_nome_npc VARCHAR,
+    p_hp_npc INTEGER,
+    p_funcao_npc funcao_p,
+    p_esta_hostil BOOLEAN,
+    p_resistencia INTEGER,
+    p_fraquezas tipo_atk,
+    p_drop_runas INTEGER
+)
 RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    new_id_chefe INTEGER;
+    v_id_personagem INTEGER;
+    v_id_npc INTEGER;
+    v_id_chefe INTEGER;
 BEGIN
-    INSERT INTO chefe (nome, hp, dano_base, lembranca, desperate_move)
-    VALUES (p_nome, p_hp, p_dano_base, p_lembranca, p_desperate_move)
-    RETURNING id_chefe INTO new_id_chefe;
+	WITH new_personagem AS (
+        INSERT INTO personagem (tipo)
+        VALUES ('Njogavel'::tipo_p)
+        RETURNING id_personagem
+    )
+    , new_funcao_npc AS (
+        INSERT INTO funcao_npc (id_npc, funcao)
+        SELECT id_personagem, p_funcao_npc
+        FROM new_personagem
+        RETURNING id_npc
+    )
+    , new_npc AS (
+        INSERT INTO npc (id_npc, nome, hp, funcao, esta_hostil, resistencia, fraquezas, drop_runas)
+        SELECT id_npc, p_nome_npc, p_hp_npc, p_funcao_npc, p_esta_hostil, p_resistencia, p_fraquezas, p_drop_runas
+        FROM new_funcao_npc
+        RETURNING id_npc
+    )
+    INSERT INTO chefe (id_chefe, nome, hp, dano_base, lembranca, desperate_move)
+    SELECT id_npc, p_nome_chefe, p_hp_chefe, p_dano_base, p_lembranca, p_desperate_move
+    FROM new_npc
+    RETURNING id_chefe INTO v_id_chefe;
 
-    RETURN new_id_chefe;
+    RETURN v_id_chefe;
 END;
 $$;
 
+SELECT add_chefe(
+    'Godrick, o Senhor', 3500, 500,
+    'Lembrança de Godrick', 6000,
+    'Godrick, o Senhor', 3500,
+    'Chefe'::funcao_p, TRUE, 300, 'Fogo'::tipo_atk, 6000
+);
+
+SELECT add_chefe(
+    'Margit, o Caído', 3000, 350,
+    'Lembrança de Margit', 4000,
+    'Margit, o Caído', 3000,
+    'Chefe'::funcao_p, TRUE, 300, 'Fogo'::tipo_atk, 4000
+);
+
+SELECT add_chefe(
+    'Rennala', 5000, 250,
+    'Lembrança de Rennala', 5000,
+    'Rennala', 5000,
+    'Chefe'::funcao_p, TRUE, 250, 'Magia'::tipo_atk, 5000
+);
+
+SELECT add_chefe(
+    'Starscourge Radahn', 8000, 600,
+    'Lembrança de Radahn', 7000,
+    'Starscourge Radahn', 8000,
+    'Chefe'::funcao_p, TRUE, 600, 'Cortante'::tipo_atk, 7000
+);
+
+SELECT add_chefe(
+    'Malenia', 7000, 500,
+    'Lembrança de Malenia', 6500,
+    'Malenia', 7000,
+    'Chefe'::funcao_p, TRUE, 500, 'Cortante'::tipo_atk, 6500
+);
 
 -- FERREIRO
 CREATE OR REPLACE FUNCTION add_ferreiro(
-    p_nome VARCHAR,
-    p_hp INTEGER
-) 
+    p_nome_ferreiro VARCHAR,
+    p_hp_ferreiro INTEGER,
+    p_nome_npc VARCHAR,
+    p_hp_npc INTEGER,
+    p_funcao_npc funcao_p,
+    p_esta_hostil BOOLEAN,
+    p_resistencia INTEGER,
+    p_fraquezas tipo_atk,
+    p_drop_runas INTEGER
+)
 RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    new_id_ferreiro INTEGER;
+    v_id_personagem INTEGER;
+    v_id_npc INTEGER;
+    v_id_ferreiro INTEGER;
 BEGIN
-    INSERT INTO ferreiro (nome, hp)
-    VALUES (p_nome, p_hp)
-    RETURNING id_ferreiro INTO new_id_ferreiro;
+	WITH new_personagem AS (
+        INSERT INTO personagem (tipo)
+        VALUES ('Njogavel'::tipo_p)
+        RETURNING id_personagem
+    )
+    , new_funcao_npc AS (
+        INSERT INTO funcao_npc (id_npc, funcao)
+        SELECT id_personagem, p_funcao_npc
+        FROM new_personagem
+        RETURNING id_npc
+    )
+    , new_npc AS (
+        INSERT INTO npc (id_npc, nome, hp, funcao, esta_hostil, resistencia, fraquezas, drop_runas)
+        SELECT id_npc, p_nome_npc, p_hp_npc, p_funcao_npc, p_esta_hostil, p_resistencia, p_fraquezas, p_drop_runas
+        FROM new_funcao_npc
+        RETURNING id_npc
+    )
+    INSERT INTO ferreiro (id_ferreiro, nome, hp)
+    SELECT id_npc, p_nome_ferreiro, p_hp_ferreiro
+    FROM new_npc
+    RETURNING id_ferreiro INTO v_id_ferreiro;
 
-    RETURN new_id_ferreiro;
+    RETURN v_id_ferreiro;
 END;
 $$;
 
-SELECT add_ferreiro('Ferreiro Mestre HEWG', 400, 'Ferreiro'::funcao_p, FALSE, 60, 'Cortante'::tipo_atk, 1000);
-SELECT add_ferreiro('Gigante Iji', 1500, 'Ferreiro'::funcao_p, FALSE, 100, 'Contusao'::tipo_atk, 5000);
-SELECT add_ferreiro('Ferreiro Kale', 400, 'Ferreiro'::funcao_p, FALSE, 50, 'Magia'::tipo_atk, 200);
+SELECT add_ferreiro(
+    'Hewg', 1000, 
+    'Hewg', 1000, 
+    'Ferreiro'::funcao_p, FALSE, 50, 'Cortante'::tipo_atk, 0
+);
+
+SELECT add_ferreiro(
+    'Iji', 1200, 
+    'Iji', 1200, 
+    'Ferreiro'::funcao_p, FALSE, 60, 'Cortante'::tipo_atk, 0
+);
+
+SELECT add_ferreiro(
+    'Smith', 800, 
+    'Smith', 800, 
+    'Ferreiro'::funcao_p, FALSE, 40, 'Cortante'::tipo_atk, 0
+);
 
 -- JOGADOR
 CREATE OR REPLACE FUNCTION add_jogador(
