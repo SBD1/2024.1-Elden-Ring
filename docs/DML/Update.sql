@@ -26,3 +26,4 @@ SET
         ELSE armadura
     END
 WHERE id_jogador = %var_id_jogador%;
+
