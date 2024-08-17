@@ -12,7 +12,7 @@ CREATE TYPE tipo_proeficiencia AS ENUM ('E', 'D', 'C', 'B', 'A', 'S');
 
 CREATE TYPE tipo_efeitos AS ENUM ('RestauraHp', 'AumentaVida', 'AumentaAtaque', 'AumentaDefesa', 'GanhaRunas');
 
-create type tipo_seccoes AS ENUM('Arma', 'Equipamento', 'Consumivel', '', 'GanhaRunas')
+--create type tipo_seccoes AS ENUM('Arma', 'Equipamento', 'Consumivel', '', 'GanhaRunas')
 
 CREATE TABLE IF NOT EXISTS personagem (
     id_personagem SERIAL PRIMARY KEY,
@@ -180,28 +180,20 @@ CREATE TABLE IF NOT EXISTS consumivel (
     CONSTRAINT chk_duracao CHECK (duracao >= 1)
 );
 
-
 CREATE TABLE IF NOT EXISTS instancia_de_item (
-    id_instancia SERIAL PRIMARY KEY,
-    id_item INTEGER REFERENCES item(id_item),
-    id_area INTEGER REFERENCES area(id_area),
-    id_inventario INTEGER REFERENCES inventario(id_usuario),
-    CHECK (
-        (id_area IS NOT NULL AND id_inventario IS NULL) OR 
-        (id_inventario IS NOT NULL AND id_area IS NULL) OR
-        (id_inventario IS NOT NULL AND id_area IS NOT NULL)
-    )
+    id_instancia_item SERIAL PRIMARY KEY,
+    id_item INTEGER REFERENCES item(id_item)
 );
 
---CREATE TABLE IF NOT EXISTS inventario (
---    id_usuario INTEGER PRIMARY KEY REFERENCES personagem(id_personagem)
---);
-
-CREATE TABLE IF NOT EXISTS inventario (
-    id_inventario INTEGER REFERENCES personagem(id_personagem),
-    id_item INTEGER REFERENCES item(id_item),
-    quantidade INTEGER NOT NULL,
-    PRIMARY KEY(id_inventario, id_instancia_item)
+create table if not exists localização_da_instancia_de_item (
+	id_instancia_item INTEGER PRIMARY KEY REFERENCES instancia_de_item(id_instancia_item),
+    area INTEGER REFERENCES area(id_area),
+    inventario_jogador INTEGER REFERENCES jogador(id_jogador),
+    CHECK (
+        (area IS NOT NULL AND inventario_jogador IS NULL) OR 
+        (inventario_jogador IS NOT NULL AND area IS NULL) OR
+        (inventario_jogador IS NOT NULL AND area IS NOT NULL)
+    )
 );
 
 -- PARTE DO EQUIPAMENTO
@@ -318,7 +310,7 @@ CREATE TABLE IF NOT EXISTS equipados (
     id_jogador INTEGER PRIMARY KEY REFERENCES jogador(id_jogador),
     mao_direita INTEGER REFERENCES equipamento(id_equipamento),
 	mao_esquerda INTEGER REFERENCES equipamento(id_equipamento),
-	armadura INTEGER REFERENCES equipamento(id_equipamento),
+	armadura INTEGER REFERENCES equipamento(id_equipamento)
 );
 
 CREATE TABLE IF NOT EXISTS instancia_npc (

@@ -252,85 +252,84 @@ INSERT INTO regiao (nome) VALUES ('Altus');
 
 -- ÁREAS DE LIMGRAVE
 INSERT INTO area (nome, id_regiao) VALUES 
-('Ruinas Entrada', 17),
-('Colina Tempestuosa', 17),
-('Peninsula Lamentosa', 17),
-('Bosque Nebuloso', 17),
-('Masmorra Solitario', 17),
-('Castelo Morne', 17),
-('Terceira Igreja', 17),
-('Fortaleza Haight', 17),
-('Caverna Lado Cova', 17),
-('Caverna Murkwater', 17);
+('Ruinas Entrada', 1),
+('Colina Tempestuosa', 1),
+('Peninsula Lamentosa', 1),
+('Bosque Nebuloso', 1),
+('Masmorra Solitario', 1),
+('Castelo Morne', 1),
+('Terceira Igreja', 1),
+('Fortaleza Haight', 1),
+('Caverna Lado Cova', 1),
+('Caverna Murkwater', 1);
 
 -- ÁREAS DE LIURNIA
 INSERT INTO area (nome, id_regiao) VALUES 
-('Lago de Liurnia', 18),
-('Ruinas Torre Arvore', 18),
-('Academia Raya Lucaria', 18),
-('Fortaleza Magisterio', 18),
-('Pantano Magos', 18),
-('Jardins Encantamentos', 18),
-('Ilha Coração Perdido', 18),
-('Ruinas Cidade Perdida', 18),
-('Salão Sabores', 18),
-('Campo Marés', 18);
+('Lago de Liurnia', 2),
+('Ruinas Torre Arvore', 2),
+('Academia Raya Lucaria', 2),
+('Fortaleza Magisterio', 2),
+('Pantano Magos', 2),
+('Jardins Encantamentos', 2),
+('Ilha Coração Perdido', 2),
+('Ruinas Cidade Perdida', 2),
+('Salão Sabores', 2),
+('Campo Marés', 2);
 
 -- ÁREAS DE CAELID
 INSERT INTO area (nome, id_regiao) VALUES 
-('Ruinas Sombra', 19),
-('Campo Morte', 19),
-('Calçada Caelid', 19),
-('Fortaleza Sanguinario', 19),
-('Área Lava', 19),
-('Ruinas Caelid', 19),
-('Caverna Coração Pedra', 19),
-('Salão Morte', 19),
-('Pantano Caelid', 19),
-('Fortaleza Condenados', 19);
+('Ruinas Sombra', 3),
+('Campo Morte', 3),
+('Calçada Caelid', 3),
+('Fortaleza Sanguinario', 3),
+('Área Lava', 3),
+('Ruinas Caelid', 3),
+('Caverna Coração Pedra', 3),
+('Salão Morte', 3),
+('Pantano Caelid', 3),
+('Fortaleza Condenados', 3);
 
 -- ÁREAS DE ALTUS
 INSERT INTO area (nome, id_regiao) VALUES 
-('Planicie Altus', 20),
-('Fortaleza Altus', 20),
-('Ruinas Cidade Alta', 20),
-('Pico Altus', 20),
-('Salão Guerrilheiros', 20),
-('Fortaleza Vento', 20),
-('Campo Ruinas', 20),
-('Encruzilhada Altus', 20),
-('Caverna Sombras', 20),
-('Jardins Montanhas', 20);
+('Planicie Altus', 4),
+('Fortaleza Altus', 4),
+('Ruinas Cidade Alta', 4),
+('Pico Altus', 4),
+('Salão Guerrilheiros', 4),
+('Fortaleza Vento', 4),
+('Campo Ruinas', 4),
+('Encruzilhada Altus', 4),
+('Caverna Sombras', 4),
+('Jardins Montanhas', 4);
 
 -- CONECTA AREA
 INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (71, 72);
+VALUES (1, 2);
 
 INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (72, 71);
+VALUES (2, 1);
 
 INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (72, 73);
+VALUES (2, 3);
 
 INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (73, 72);
+VALUES (3, 2);
 
 INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (73, 74);
+VALUES (3, 4);
 
 INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (74, 73);
+VALUES (4, 3);
 
 -- INSTANCIA NPC 
 INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (35, 73);
+VALUES (1, 3);
 
 INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (35, 73);
+VALUES (1, 4);
 
 INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (34, 73);
-
+VALUES (2, 5);
 
 -- CLASSE
 ---- classes
@@ -408,26 +407,26 @@ SELECT add_nivel(40, 1334);
 
 -- DIALOGO
 INSERT INTO dialogo (id_npc, texto, e_unico)
-VALUES (38, 'Ah... finalmente, você chegou. O destino o trouxe até aqui, mas não sem um propósito.', TRUE);
+VALUES (5, 'Ah... finalmente, você chegou. O destino o trouxe até aqui, mas não sem um propósito.', TRUE);
 
 INSERT INTO dialogo (id_npc, texto, e_unico)
-VALUES (38, 'Você é um Tarnished, alguém que já caminhou nas sombras da glória perdida. Mas não se deixe enganar por seu estado... a Chama do Destino ainda arde em seu coração.', TRUE);
+VALUES (5, 'Você é um Tarnished, alguém que já caminhou nas sombras da glória perdida. Mas não se deixe enganar por seu estado... a Chama do Destino ainda arde em seu coração.', TRUE);
 
 INSERT INTO dialogo (id_npc, texto, e_unico)
-VALUES (38, 'Veja, o mundo está em ruínas, desfigurado pela corrupção e pela ambição sem fim dos deuses. O ciclo se repete, como sempre, mas há uma pequena esperança... e essa esperança é você.' , TRUE);
+VALUES (5, 'Veja, o mundo está em ruínas, desfigurado pela corrupção e pela ambição sem fim dos deuses. O ciclo se repete, como sempre, mas há uma pequena esperança... e essa esperança é você.' , TRUE);
 
 INSERT INTO dialogo (id_npc, texto, e_unico)
-VALUES (38, 'Agora vá... siga o brilho pálido da luz e lembre-se: o caminho é seu para forjar, mas o preço a pagar será sua própria essência. Que a graça guie seu caminho... ou condene sua alma.' , TRUE);
+VALUES (5, 'Agora vá... siga o brilho pálido da luz e lembre-se: o caminho é seu para forjar, mas o preço a pagar será sua própria essência. Que a graça guie seu caminho... ou condene sua alma.' , TRUE);
 
 -- REALIZA
 INSERT INTO realiza (id_npc, multiplicador, dano_final)
-VALUES (35, 25, 25);
+VALUES (5, 25, 25);
 
 INSERT INTO realiza (id_npc, multiplicador, dano_final)
-VALUES (37, 50, 50);
+VALUES (4, 50, 50);
 
 INSERT INTO realiza (id_npc, multiplicador, dano_final)
-VALUES (38, 75, 75);
+VALUES (5, 75, 75);
 
 -- JOGADOR
 CREATE OR REPLACE FUNCTION add_jogador(
@@ -475,41 +474,41 @@ END;
 $$;
 
 SELECT add_jogador(
-    'Aragorn', 1200, 10, 'Guerreiro', 71, 15, 14, 8, 9, 18, 12, 150, 120, 60, 12
+    'Aragorn', 1200, 10, 'Guerreiro', 1, 15, 14, 8, 9, 18, 12, 150, 120, 60, 12
 );
 
 SELECT add_jogador(
-    'Sekiro', 1100, 15, 'Samurai', 71, 17, 16, 10, 8, 20, 14, 160, 130, 70, 15
+    'Sekiro', 1100, 15, 'Samurai', 1, 17, 16, 10, 8, 20, 14, 160, 130, 70, 15
 );
 
 SELECT add_jogador(
-    'Gandalf', 900, 20, 'Astrólogo', 71, 12, 11, 18, 14, 14, 10, 140, 110, 80, 20
+    'Gandalf', 900, 20, 'Astrólogo', 1, 12, 11, 18, 14, 14, 10, 140, 110, 80, 20
 );
 
 SELECT add_jogador(
-    'Chifrudo', 800, 15, 'Profeta', 71, 12, 11, 16, 10, 8, 20, 122, 95, 80, 30
+    'Chifrudo', 800, 15, 'Profeta', 1, 12, 11, 16, 10, 8, 20, 122, 95, 80, 30
 );
 
 -- CHEFES DERROTADOS
 INSERT INTO chefes_derrotados (id_chefe, id_jogador)
-VALUES (37, 48);
+VALUES (4, 12);
 
 INSERT INTO chefes_derrotados (id_chefe, id_jogador)
-VALUES (38, 48);
+VALUES (5, 12);
 
 INSERT INTO chefes_derrotados (id_chefe, id_jogador)
-VALUES (39, 48);
+VALUES (6, 12);
 
 
 -- AREA DA MORTE
 INSERT INTO area_de_morte (id_jogador, id_area, runas_dropadas)
-VALUES (46, 74, 2500);
+VALUES (13, 4, 2500);
 
 INSERT INTO area_de_morte (id_jogador, id_area, runas_dropadas)
-VALUES (47, 76, 15300);
+VALUES (14, 6, 15300);
 
 INSERT INTO area_de_morte (id_jogador, id_area, runas_dropadas)
-VALUES (48, 78, 30762);
+VALUES (15, 8, 30762);
 
 -- ITEM
 INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
@@ -523,56 +522,25 @@ VALUES (true, 2, 'Grande Runa - 2', NULL, NULL);
 
 -- Instancia Item -> TESTAR DEPOIS QUE FIZEREM A PARTE DE AREA
 
-INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
-VALUES (1, 1, null);  
+INSERT INTO instancia_de_item (id_item)
+VALUES (1);  
 
-INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
-VALUES (1, null, 1);  
+INSERT INTO instancia_de_item (id_item)
+VALUES (1);  
 
-INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
-VALUES (2, null, 1);  
+INSERT INTO instancia_de_item (id_item)
+VALUES (2);  
 
--- Inventario -> TESTAR DEPOIS QUE FIZEREM A PARTE DE AREA E PERSONAGEM
+-- Instancia item está em -> 
 
--- Obs: o inventario ele so é atualizado caso haja uma adição de uma instancia item em um id_iventario
-CREATE OR REPLACE FUNCTION add_item_inventario()
-RETURNS TRIGGER AS $$
-BEGIN
-    -- Se id_area não for nulo, não faz nada
-    IF NEW.id_area IS NOT NULL THEN
-        RETURN NEW;
-    END IF;
+INSERT INTO localização_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
+VALUES (1, null, 12);  
 
-    -- Insere um registro na tabela item_inventario
-    INSERT INTO inventario (id_inventario, id_instancia_item, quantidade)
-    VALUES (NEW.id_inventario, NEW.id_item, 1)
-    ON CONFLICT (id_inventario, id_instancia_item) 
-    DO UPDATE SET quantidade = inventario.quantidade + 1; -- Atualiza a quantidade se já existir
+INSERT INTO localização_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
+VALUES (2, null, 12); 
 
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Trigger que chama a função após inserir ou atualizar em instancia_de_item
-CREATE TRIGGER trigger_criar_instancia_item
-AFTER INSERT OR UPDATE ON instancia_de_item
-FOR EACH ROW
-EXECUTE FUNCTION add_item_inventario();
-
-INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
-VALUES (1, null, 1);  
-
-INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
-VALUES (3, null, 1);
-
-INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
-VALUES (3, null, 1);
-
--- Trigger que chama a função após inserir ou atualizar em item_inventario
-CREATE TRIGGER trigger_criar_instancia_item
-AFTER INSERT OR UPDATE ON item_inventario
-FOR EACH ROW
-EXECUTE FUNCTION add_item_inventario();
+INSERT INTO localização_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
+VALUES (3, 5, null); 
 
 -- Escudo
 CREATE OR REPLACE FUNCTION add_escudo(
@@ -695,10 +663,10 @@ SELECT add_arma_leve(
 
 -- EQUIPADOS -> SO PODE SER TESTADO DEPOIS DE COLOCAR O JOGADORES E TODOS EQUIPAMENTOS
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (1, 10, 20, 30);
+VALUES (12, 7, 4, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (2, 40, NULL, 60);
+VALUES (13, 8, NULL, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (3, NULL, 50, 30);
+VALUES (14, NULL, 5, null);
