@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS funcao_npc (
 
 CREATE TABLE IF NOT EXISTS npc (
     id_npc INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
-    nome VARCHAR(25) NOT NULL,
+    nome CHAR(25) NOT NULL,
     hp INTEGER NOT NULL,
     funcao funcao_p NOT NULL,
     esta_hostil BOOLEAN NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS npc (
 
 CREATE TABLE IF NOT EXISTS inimigo (
     id_inimigo INTEGER PRIMARY KEY REFERENCES npc(id_npc),
-    nome VARCHAR(25) NOT NULL,
+    nome CHAR(25) NOT NULL,
     hp INTEGER NOT NULL,
     dano_base INTEGER NOT NULL,
     CONSTRAINT chk_hp CHECK (hp >= 1),
@@ -51,10 +51,10 @@ CREATE TABLE IF NOT EXISTS inimigo (
 
 CREATE TABLE IF NOT EXISTS chefe (
     id_chefe INTEGER PRIMARY KEY REFERENCES npc(id_npc),
-    nome VARCHAR(25) NOT NULL,
+    nome CHAR(25) NOT NULL,
     hp INTEGER NOT NULL,
     dano_base INTEGER NOT NULL,
-    lembranca VARCHAR(25) NOT NULL,
+    lembranca CHAR(25) NOT NULL,
     desperate_move INTEGER NOT NULL,
     CONSTRAINT chk_hp CHECK (hp >= 1),
     CONSTRAINT chk_dano_base_chefe CHECK (dano_base >= 0)
@@ -62,24 +62,24 @@ CREATE TABLE IF NOT EXISTS chefe (
 
 CREATE TABLE IF NOT EXISTS regiao (
     id_regiao SERIAL PRIMARY KEY,
-    nome VARCHAR(10) UNIQUE NOT NULL
+    nome CHAR(25) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS area (
     id_area SERIAL PRIMARY KEY,
-    nome VARCHAR(10) UNIQUE NOT NULL,
+    nome CHAR(25) UNIQUE NOT NULL,
     id_regiao INTEGER REFERENCES regiao(id_regiao)
 );
 
 CREATE TABLE IF NOT EXISTS ferreiro (
     id_ferreiro INTEGER PRIMARY KEY REFERENCES npc(id_npc),
-    nome VARCHAR(25) NOT NULL,
+    nome CHAR(25) NOT NULL,
     hp INTEGER NOT NULL,
     CONSTRAINT chk_hp CHECK (hp >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS classe (
-    nome VARCHAR(14) PRIMARY KEY,
+    nome CHAR(14) PRIMARY KEY,
     base_vit INTEGER NOT NULL,
     base_vig INTEGER NOT NULL,
     base_int INTEGER NOT NULL,
@@ -104,10 +104,10 @@ CREATE TABLE IF NOT EXISTS nivel (
 
 CREATE TABLE IF NOT EXISTS jogador (
     id_jogador INTEGER PRIMARY KEY REFERENCES personagem(id_personagem),
-    nome VARCHAR(25) NOT NULL,
+    nome CHAR(25) NOT NULL,
     hp INTEGER NOT NULL,
     id_nivel INTEGER REFERENCES nivel(id_nivel),
-    id_classe VARCHAR(14) REFERENCES classe(nome),
+    id_classe CHAR(14) REFERENCES classe(nome),
     id_area INTEGER REFERENCES area(id_area),
     vigor INTEGER NOT NULL,
     vitalidade INTEGER NOT NULL,
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS item (
     id_item SERIAL PRIMARY KEY,
     eh_chave BOOLEAN NOT NULL,
     raridade INTEGER NOT NULL,
-    nome VARCHAR(25) NOT NULL,
+    nome CHAR(25) NOT NULL,
     valor INTEGER,
     tipo tipo_item,
     CHECK (

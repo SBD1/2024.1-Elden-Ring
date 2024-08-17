@@ -244,15 +244,92 @@ SELECT add_ferreiro(
     'Ferreiro'::funcao_p, FALSE, 40, 'Cortante'::tipo_atk, 0
 );
 
+-- REGIOES
+INSERT INTO regiao (nome) VALUES ('Limgrave');
+INSERT INTO regiao (nome) VALUES ('Liurnia');
+INSERT INTO regiao (nome) VALUES ('Caelid');
+INSERT INTO regiao (nome) VALUES ('Altus'); 
+
+-- ÁREAS DE LIMGRAVE
+INSERT INTO area (nome, id_regiao) VALUES 
+('Ruinas Entrada', 17),
+('Colina Tempestuosa', 17),
+('Peninsula Lamentosa', 17),
+('Bosque Nebuloso', 17),
+('Masmorra Solitario', 17),
+('Castelo Morne', 17),
+('Terceira Igreja', 17),
+('Fortaleza Haight', 17),
+('Caverna Lado Cova', 17),
+('Caverna Murkwater', 17);
+
+-- ÁREAS DE LIURNIA
+INSERT INTO area (nome, id_regiao) VALUES 
+('Lago de Liurnia', 18),
+('Ruinas Torre Arvore', 18),
+('Academia Raya Lucaria', 18),
+('Fortaleza Magisterio', 18),
+('Pantano Magos', 18),
+('Jardins Encantamentos', 18),
+('Ilha Coração Perdido', 18),
+('Ruinas Cidade Perdida', 18),
+('Salão Sabores', 18),
+('Campo Marés', 18);
+
+-- ÁREAS DE CAELID
+INSERT INTO area (nome, id_regiao) VALUES 
+('Ruinas Sombra', 19),
+('Campo Morte', 19),
+('Calçada Caelid', 19),
+('Fortaleza Sanguinario', 19),
+('Área Lava', 19),
+('Ruinas Caelid', 19),
+('Caverna Coração Pedra', 19),
+('Salão Morte', 19),
+('Pantano Caelid', 19),
+('Fortaleza Condenados', 19);
+
+-- ÁREAS DE ALTUS
+INSERT INTO area (nome, id_regiao) VALUES 
+('Planicie Altus', 20),
+('Fortaleza Altus', 20),
+('Ruinas Cidade Alta', 20),
+('Pico Altus', 20),
+('Salão Guerrilheiros', 20),
+('Fortaleza Vento', 20),
+('Campo Ruinas', 20),
+('Encruzilhada Altus', 20),
+('Caverna Sombras', 20),
+('Jardins Montanhas', 20);
+
+-- CONECTA AREA
+INSERT INTO conecta_area (id_origem, id_destino)
+VALUES (71, 72);
+
+INSERT INTO conecta_area (id_origem, id_destino)
+VALUES (72, 71);
+
+INSERT INTO conecta_area (id_origem, id_destino)
+VALUES (72, 73);
+
+INSERT INTO conecta_area (id_origem, id_destino)
+VALUES (73, 72);
+
+INSERT INTO conecta_area (id_origem, id_destino)
+VALUES (73, 74);
+
+INSERT INTO conecta_area (id_origem, id_destino)
+VALUES (74, 73);
+
 -- INSTANCIA NPC 
 INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (1, 2);
+VALUES (35, 73);
 
 INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (2, 2);
+VALUES (35, 73);
 
 INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (3, 1);
+VALUES (34, 73);
 
 
 -- CLASSE
@@ -288,156 +365,151 @@ BEGIN
 END;
 $$;
 
+SELECT add_nivel(1, 673);
+SELECT add_nivel(2, 689);
+SELECT add_nivel(3, 706);
+SELECT add_nivel(4, 722);
+SELECT add_nivel(5, 739);
+SELECT add_nivel(6, 756);
+SELECT add_nivel(7, 773);
+SELECT add_nivel(8, 790);
+SELECT add_nivel(9, 807);
+SELECT add_nivel(10, 824);
+SELECT add_nivel(11, 841);
+SELECT add_nivel(12, 858);
+SELECT add_nivel(13, 875);
+SELECT add_nivel(14, 892);
+SELECT add_nivel(15, 909);
+SELECT add_nivel(16, 926);
+SELECT add_nivel(17, 943);
+SELECT add_nivel(18, 960);
+SELECT add_nivel(19, 977);
+SELECT add_nivel(20, 994);
+SELECT add_nivel(21, 1011);
+SELECT add_nivel(22, 1028);
+SELECT add_nivel(23, 1045);
+SELECT add_nivel(24, 1062);
+SELECT add_nivel(25, 1079);
+SELECT add_nivel(26, 1096);
+SELECT add_nivel(27, 1113);
+SELECT add_nivel(28, 1130);
+SELECT add_nivel(29, 1147);
+SELECT add_nivel(30, 1164);
+SELECT add_nivel(31, 1181);
+SELECT add_nivel(32, 1198);
+SELECT add_nivel(33, 1215);
+SELECT add_nivel(34, 1232);
+SELECT add_nivel(35, 1249);
+SELECT add_nivel(36, 1266);
+SELECT add_nivel(37, 1283);
+SELECT add_nivel(38, 1300);
+SELECT add_nivel(39, 1317);
+SELECT add_nivel(40, 1334);
+
 -- DIALOGO
 INSERT INTO dialogo (id_npc, texto, e_unico)
-VALUES (1, 'Ah... finalmente, você chegou. O destino o trouxe até aqui, mas não sem um propósito.', TRUE);
+VALUES (38, 'Ah... finalmente, você chegou. O destino o trouxe até aqui, mas não sem um propósito.', TRUE);
 
 INSERT INTO dialogo (id_npc, texto, e_unico)
-VALUES (1, 'Você é um Tarnished, alguém que já caminhou nas sombras da glória perdida. Mas não se deixe enganar por seu estado... a Chama do Destino ainda arde em seu coração.', TRUE);
+VALUES (38, 'Você é um Tarnished, alguém que já caminhou nas sombras da glória perdida. Mas não se deixe enganar por seu estado... a Chama do Destino ainda arde em seu coração.', TRUE);
 
 INSERT INTO dialogo (id_npc, texto, e_unico)
-VALUES (1, 'Veja, o mundo está em ruínas, desfigurado pela corrupção e pela ambição sem fim dos deuses. O ciclo se repete, como sempre, mas há uma pequena esperança... e essa esperança é você.'  TRUE);
+VALUES (38, 'Veja, o mundo está em ruínas, desfigurado pela corrupção e pela ambição sem fim dos deuses. O ciclo se repete, como sempre, mas há uma pequena esperança... e essa esperança é você.' , TRUE);
 
 INSERT INTO dialogo (id_npc, texto, e_unico)
-VALUES (1, 'Agora vá... siga o brilho pálido da luz e lembre-se: o caminho é seu para forjar, mas o preço a pagar será sua própria essência. Que a graça guie seu caminho... ou condene sua alma.'  TRUE);
+VALUES (38, 'Agora vá... siga o brilho pálido da luz e lembre-se: o caminho é seu para forjar, mas o preço a pagar será sua própria essência. Que a graça guie seu caminho... ou condene sua alma.' , TRUE);
+
+-- REALIZA
+INSERT INTO realiza (id_npc, multiplicador, dano_final)
+VALUES (35, 25, 25);
+
+INSERT INTO realiza (id_npc, multiplicador, dano_final)
+VALUES (37, 50, 50);
+
+INSERT INTO realiza (id_npc, multiplicador, dano_final)
+VALUES (38, 75, 75);
 
 -- JOGADOR
 CREATE OR REPLACE FUNCTION add_jogador(
-    p_nome
-    P_hp
-    p_vigor
-    p_vitalidade
-    p_intel
-    p_fe
-    p_destreza
-    p_forca
-    p_peso_max
-    p_stamina
-    p_pontos_mana
-    p_nivel_atual
+    p_nome_jogador VARCHAR,
+    p_hp INTEGER,
+    p_id_nivel INTEGER,
+    p_id_classe VARCHAR,
+    p_id_area INTEGER,
+    p_vigor INTEGER,
+    p_vitalidade INTEGER,
+    p_intel INTEGER,
+    p_fe INTEGER,
+    p_destreza INTEGER,
+    p_forca INTEGER,
+    p_peso_max INTEGER,
+    p_stamina INTEGER,
+    p_mp INTEGER,
+    p_nivel_atual INTEGER
 )
 RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    new_id_jogador INTEGER;
-    new_id_nivel INTEGER;
-    new_id_classe VARCHAR;
-    new_id_area INTEGER;
+    v_id_personagem INTEGER;
+    v_id_jogador INTEGER;
 BEGIN
-    INSERT INTO jogador(nome, hp, vigor, vitalidade, intel, fe, destreza, forca, peso_max, stamina, mp, nivel_atual)
-    VALUES
-    RETURNING id_jogador INTO new_id_jogador;
-    RETURNING id_nivel INTO new_id_nivel;
-    RETURNING id_classe INTO new_id_classe;
-    RETURNING id_area INTO new_id_area;
+    INSERT INTO personagem (tipo)
+    VALUES ('Jogavel'::tipo_p)
+    RETURNING id_personagem INTO v_id_personagem;
 
-    RETURN new_id_jogador;
-    RETURN new_id_nivel;
-    RETURN new_id_classe;
-    RETURN new_id_area;
+    INSERT INTO jogador (
+        id_jogador, nome, hp, id_nivel, id_classe, id_area,
+        vigor, vitalidade, intel, fe, destreza, forca,
+        peso_max, stamina, mp, nivel_atual
+    )
+    VALUES (
+        v_id_personagem, p_nome_jogador, p_hp, p_id_nivel, p_id_classe, p_id_area,
+        p_vigor, p_vitalidade, p_intel, p_fe, p_destreza, p_forca,
+        p_peso_max, p_stamina, p_mp, p_nivel_atual
+    )
+    RETURNING id_jogador INTO v_id_jogador;
+
+    RETURN v_id_jogador;
 END;
 $$;
 
--- REALIZA
-INSERT INTO realiza (id_npc, multiplicador, dano_final)
-VALUES (1, 0.25, 25);
+SELECT add_jogador(
+    'Aragorn', 1200, 10, 'Guerreiro', 71, 15, 14, 8, 9, 18, 12, 150, 120, 60, 12
+);
 
-INSERT INTO realiza (id_npc, multiplicador, dano_final)
-VALUES (2, 0.50, 50);
+SELECT add_jogador(
+    'Sekiro', 1100, 15, 'Samurai', 71, 17, 16, 10, 8, 20, 14, 160, 130, 70, 15
+);
 
-INSERT INTO realiza (id_npc, multiplicador, dano_final)
-VALUES (3, 0.75, 75);
+SELECT add_jogador(
+    'Gandalf', 900, 20, 'Astrólogo', 71, 12, 11, 18, 14, 14, 10, 140, 110, 80, 20
+);
+
+SELECT add_jogador(
+    'Chifrudo', 800, 15, 'Profeta', 71, 12, 11, 16, 10, 8, 20, 122, 95, 80, 30
+);
 
 -- CHEFES DERROTADOS
 INSERT INTO chefes_derrotados (id_chefe, id_jogador)
-VALUES (1, 1);
+VALUES (37, 48);
 
 INSERT INTO chefes_derrotados (id_chefe, id_jogador)
-VALUES (1, 2);
+VALUES (38, 48);
 
 INSERT INTO chefes_derrotados (id_chefe, id_jogador)
-VALUES (2, 1);
+VALUES (39, 48);
 
--- REGIOES
-INSERT INTO regiao (nome) VALUES ('Limgrave');
-INSERT INTO regiao (nome) VALUES ('Liurnia');
-INSERT INTO regiao (nome) VALUES ('Caelid');
-INSERT INTO regiao (nome) VALUES ('Altus'); 
-
--- AREA
-INSERT INTO area (nome, id_regiao)
-VALUES 
-('Ruínas da Entrada', 1),
-'Colina Tempestuosa', 1),
-'Península Lamentosa', 1),
-'Bosque Nebuloso', 1),
-'Masmorra do Cão Solitário', 1),
-'Castelo Morne', 1),
-'Terceira Igreja de Marika', 1),
-'Fortaleza Haight', 1),
-'Caverna do Lado da Cova', 1),
-'Caverna Murkwater', 1);
-
-INSERT INTO area (nome, id_regiao)
-VALUES 
-('Lago de Liurnia', 2),
-'Ruínas da Torre da Árvore', 2),
-'Academia de Raya Lucaria', 2),
-'Fortaleza do Magistério', 2),
-'Pântano dos Magos', 2),
-'Jardins dos Encantamentos', 2),
-'Ilha do Coração Perdido', 2),
-'Ruínas da Cidade Perdida', 2),
-'Salão dos Sabores', 2),
-'Campo das Marés', 2);
-
-
-INSERT INTO area (nome, id_regiao)
-VALUES 
-('Ruínas da Sombra', 3),
-'Campo de Morte', 3),
-'Calçada de Caelid', 3),
-'Fortaleza do Sanguinário', 3),
-'Área da Lava', 3),
-'Ruínas de Caelid', 3),
-'Caverna do Coração de Pedra', 3),
-'Salão de Morte', 3),
-'Pântano de Caelid', 3),
-'Fortaleza dos Condenados', 3);
-
-INSERT INTO area (nome, id_regiao)
-VALUES 
-('Planície de Altus', 4),
-'Fortaleza de Altus', 4),
-'Ruínas da Cidade Alta', 4),
-'Pico de Altus', 4),
-'Salão dos Guerrilheiros', 4),
-'Fortaleza do Vento', 4),
-'Campo das Ruínas', 4),
-'Encruzilhada de Altus', 4),
-'Caverna das Sombras', 4),
-'Jardins das Montanhas', 4);
 
 -- AREA DA MORTE
 INSERT INTO area_de_morte (id_jogador, id_area, runas_dropadas)
-VALUES (1, 1, 2500);
+VALUES (46, 74, 2500);
 
 INSERT INTO area_de_morte (id_jogador, id_area, runas_dropadas)
-VALUES (1, 2, 15300);
+VALUES (47, 76, 15300);
 
 INSERT INTO area_de_morte (id_jogador, id_area, runas_dropadas)
-VALUES (1, 3, 30762);
-
--- CONECTA AREA
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (1, 2);
-
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (2, 3);
-
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (3, 4);
+VALUES (48, 78, 30762);
 
 -- ITEM
 INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
