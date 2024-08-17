@@ -1,11 +1,10 @@
 
 -- item (ok)
 -- consumivel
--- inventario
--- instancia_de_item
--- item_inventario
--- equipamento
--- escudo
+-- inventario (ok -> Falta testar)
+-- instancia_de_item (ok -> Falta testar)
+-- equipamento (tem que fazer todos equipamentos para dar ok)
+-- escudo (ok)
 -- armadura
 -- arma (tem que fazer todos tipos de arma para dar ok)
 -- arma_pesada
@@ -13,7 +12,7 @@
 -- cajado
 -- selo
 -- engaste
--- equipados
+-- equipados (ok -> Falta testar)
 
 -- personagem ok
 -- funcao_npc ok
@@ -286,33 +285,125 @@ END;
 $$;
 
 -- ITEM
-CREATE OR REPLACE FUNCTION add_item(
+INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+VALUES (false, 2, 'Pedra de Forja', 200, NULL);
+
+INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+VALUES (true, 2, 'Grande Runa - 1', NULL, NULL);
+
+INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+VALUES (true, 2, 'Grande Runa - 2', NULL, NULL);
+
+-- Instancia Item -> TESTAR DEPOIS QUE FIZEREM A PARTE DE AREA
+
+INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
+VALUES (1, 1, null);  
+
+INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
+VALUES (1, null, 1);  
+
+INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
+VALUES (2, null, 1);  
+
+-- Inventario -> TESTAR DEPOIS QUE FIZEREM A PARTE DE AREA E PERSONAGEM
+
+-- Obs: o inventario ele so é atualizado caso haja uma adição de uma instancia item em um id_iventario
+CREATE OR REPLACE FUNCTION add_item_inventario()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Se id_area não for nulo, não faz nada
+    IF NEW.id_area IS NOT NULL THEN
+        RETURN NEW;
+    END IF;
+
+    -- Insere um registro na tabela item_inventario
+    INSERT INTO inventario (id_inventario, id_instancia_item, quantidade)
+    VALUES (NEW.id_inventario, NEW.id_item, 1)
+    ON CONFLICT (id_inventario, id_instancia_item) 
+    DO UPDATE SET quantidade = inventario.quantidade + 1; -- Atualiza a quantidade se já existir
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger que chama a função após inserir ou atualizar em instancia_de_item
+CREATE TRIGGER trigger_criar_instancia_item
+AFTER INSERT OR UPDATE ON instancia_de_item
+FOR EACH ROW
+EXECUTE FUNCTION add_item_inventario();
+
+INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
+VALUES (1, null, 1);  
+
+INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
+VALUES (3, null, 1);
+
+INSERT INTO instancia_de_item (id_item, id_area, id_inventario)
+VALUES (3, null, 1);
+
+-- Trigger que chama a função após inserir ou atualizar em item_inventario
+CREATE TRIGGER trigger_criar_instancia_item
+AFTER INSERT OR UPDATE ON item_inventario
+FOR EACH ROW
+EXECUTE FUNCTION add_item_inventario();
+
+-- Escudo
+CREATE OR REPLACE FUNCTION add_escudo(
     p_nome VARCHAR,
     p_raridade INTEGER,
     p_valor NUMERIC,
     p_tipo_item tipo_item,
-    p_eh_chave BOOLEAN
+    p_tipo_equipamento tipo_equipamento,
+    p_requisitos INTEGER[],
+    p_melhoria INTEGER,
+    p_peso INTEGER,
+    p_custo_melhoria INTEGER,
+    p_habilidade INTEGER,
+    p_defesa INTEGER
 ) 
 RETURNS INTEGER
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    new_id_item INTEGER;
+    v_id_escudo INTEGER;
 BEGIN
-    INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
-    VALUES (p_eh_chave, p_raridade, p_nome, p_valor, p_tipo_item)
-    RETURNING id_item INTO new_id_item;
+    -- Inserção na tabela item e captura do id_item
+    WITH new_item AS (
+        INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+        VALUES (FALSE, p_raridade, p_nome, p_valor, p_tipo_item)
+        RETURNING id_item
+    )
+    -- Inserção na tabela equipamento com id_item
+    , new_equipamento AS (
+        INSERT INTO equipamento (id_equipamento, tipo)
+        SELECT id_item, p_tipo_equipamento
+        FROM new_item
+        RETURNING id_equipamento
+    )
+    INSERT INTO escudo (id_escudo, habilidade, requisitos, defesa, melhoria, peso, custo_melhoria)
+    SELECT id_equipamento, p_habilidade, p_requisitos, p_defesa, p_melhoria, p_peso, p_custo_melhoria
+    FROM new_equipamento
+    RETURNING id_escudo INTO v_id_escudo;
 
-    RETURN new_id_item;
+    -- Retorna o id da arma leve inserida
+    RETURN v_id_escudo;
 END;
 $$;
 
-SELECT add_item('Pedra de Forja', 2, 200, NULL, false) AS pedraForja;
+SELECT add_escudo (
+    'Escudo de Ferro', 1, 200, 'Equipamento'::tipo_item, 'Escudo'::tipo_equipamento,
+    ARRAY[1, 1, 1, 14], 0, 5, 2, 40, 100
+) AS id_escudo;
 
-SELECT add_item('Grande Runa - 1', 2, null, NULL, true) AS grandeRuna1;
+SELECT add_escudo (
+    'Escudo Fumegante', 3, 1000, 'Equipamento'::tipo_item, 'Escudo'::tipo_equipamento,
+    ARRAY[1, 3, 10, 9], 0, 5, 2, 50, 140
+) AS id_escudo;
 
-SELECT add_item('Grande Runa - 2', 2, null, NULL, true) AS grandeRuna2;
-
+SELECT add_escudo (
+    'Escudo do Lorde', 2, 800, 'Equipamento'::tipo_item, 'Escudo'::tipo_equipamento,
+    ARRAY[1, 1, 1, 16], 0, 5, 2, 30, 120
+) AS id_escudo;
 
 -- ARMA LEVE
 CREATE OR REPLACE FUNCTION add_arma_leve(
@@ -344,22 +435,15 @@ BEGIN
     )
     -- Inserção na tabela equipamento com id_item
     , new_equipamento AS (
-        INSERT INTO equipamento (id_equipamento, tipo, requisitos, melhoria, peso, custo_melhoria)
-        SELECT id_item, p_tipo_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria
+        INSERT INTO equipamento (id_equipamento, tipo)
+        SELECT id_item, p_tipo_equipamento
         FROM new_item
         RETURNING id_equipamento
     )
-    -- Inserção na tabela arma com id_equipamento
-    , new_arma AS (
-        INSERT INTO arma (id_arma, habilidade, dano, critico)
-        SELECT id_equipamento, p_habilidade, p_dano, p_critico
-        FROM new_equipamento
-        RETURNING id_arma
-    )
-    -- Inserção na tabela arma_leve com id_arma e captura do id_arma_leve
-    INSERT INTO arma_leve (id_arma_leve, destreza)
-    SELECT id_arma, p_destreza
-    FROM new_arma
+    -- Inserção na tabela arma_leve com id_equipamento e captura do id_arma_leve
+    INSERT INTO arma_leve (id_arma_leve, habilidade, dano, critico, requisitos, melhoria, peso, custo_melhoria, destreza)
+    SELECT id_equipamento, p_habilidade, p_dano, p_critico, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_destreza
+    FROM new_equipamento
     RETURNING id_arma_leve INTO v_id_arma_leve;
 
     -- Retorna o id da arma leve inserida
@@ -381,3 +465,13 @@ SELECT add_arma_leve(
     'Esp. Amaldi. de Morgott', 5, 1200, 'Equipamento'::tipo_item, 'Arma'::tipo_equipamento,
     ARRAY[1, 1, 35, 14], 0, 6.5, 8, 100, 120, 100, 35
 ) AS id_arma_leve;
+
+-- EQUIPADOS -> SO PODE SER TESTADO DEPOIS DE COLOCAR O JOGADORES E TODOS EQUIPAMENTOS
+INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
+VALUES (1, 10, 20, 30);
+
+INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
+VALUES (2, 40, NULL, 60);
+
+INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
+VALUES (3, NULL, 50, 30);
