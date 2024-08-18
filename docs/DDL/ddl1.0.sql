@@ -165,9 +165,10 @@ CREATE TABLE IF NOT EXISTS item (
     tipo tipo_item,
     CHECK (
     	(eh_chave = TRUE AND tipo IS NULL) OR 
-    	(eh_chave = FALSE AND tipo IS NOT NULL) or 
+    	(eh_chave = FALSE AND tipo IS NOT NULL) OR 
     	(eh_chave = FALSE AND tipo is NULL)
     )
+    CONSTRAINT chk_raridade CHECK (raridade >= 1 AND raridade <= 5),
 );
 
 CREATE TABLE IF NOT EXISTS consumivel (
