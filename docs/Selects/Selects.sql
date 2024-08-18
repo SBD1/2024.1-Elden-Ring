@@ -118,3 +118,16 @@ LEFT JOIN
     regiao ON area.id_regiao = regiao.id_regiao
 where id_jogador = %var%;
 
+-- Areas Conectadas
+
+SELECT 
+	conecta_area.id_origem,
+	conecta_area.id_destino,
+	area.nome as destino_nome
+from
+	conecta_area
+left join
+	area on conecta_area.id_destino = area.id_area 
+where 
+	id_origem = %var;
+
