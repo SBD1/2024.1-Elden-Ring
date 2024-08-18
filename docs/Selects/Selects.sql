@@ -131,3 +131,20 @@ left join
 where 
 	id_origem = %var;
 
+-- ver área de morte de um jogador x
+SELECT AM.id_area FROM area_de_morte AM WHERE AM.id_jogador = %player%;
+
+-- selecionar o dialogo pelo id do npc
+SELECT D.texto FROM dialogo D WHERE D.id_npc = %npc%;
+
+-- selecionar os inimigos da área
+SELECT N.id_npc, N.nome, N.hp, N.funcao, N.esta_hostil, N.fraquezas, N.drop_runas
+	FROM npc N JOIN instancia_npc I ON I.id_npc = N.id_npc WHERE I.id_area = %area%;
+
+-- selecionar os chefes da área
+SELECT N.id_npc, N.nome, N.hp, N.funcao, N.esta_hostil, N.fraquezas, N.drop_runas
+	FROM npc N JOIN instancia_npc I ON I.id_npc = N.id_npc WHERE I.id_area = %area% AND N.funcao = 'Chefe';
+
+-- selecionar os inimigos da área
+SELECT N.id_npc, N.nome, N.hp, N.funcao, N.esta_hostil, N.fraquezas, N.drop_runas
+	FROM npc N JOIN instancia_npc I ON I.id_npc = N.id_npc WHERE I.id_area = %area% AND N.funcao = 'Inimigo';

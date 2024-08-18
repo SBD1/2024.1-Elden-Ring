@@ -27,3 +27,39 @@ SET
     END
 WHERE id_jogador = %var_id_jogador%;
 
+-- Atualiza Area
+UPDATE jogador
+SET id_area = %area%
+WHERE id_jogador = %player%
+
+-- Atualiza HP do Jogador
+UPDATE jogador
+SET hp = %v_hp%
+WHERE id_jogador = %v_id%
+
+-- Atualiza nível do jogador
+UPDATE jogador
+SET 
+    id_nivel = %new_id_lvl%, 
+    nivel_atual = %new_lvl%,   
+    hp = %new_hp%,              
+    stamina = %new_stamina%,    
+    mp = %new_mp%,            
+    vigor = %new_vigor%,           
+    vitalidade = %new_vit%, 
+    intel = %new_int%,         
+    fe = %new_fe%,            
+    destreza = %new_dex%,   
+    forca = %new_str%,          
+    peso_max = %new_p% 
+WHERE 
+    id_jogador = %player_id%;
+
+-- Atualiza area de morte
+UPDATE area_de_morte
+SET 
+    id_area = %area%,
+    runas_dropadas = %runas%
+WHERE 
+    id_jogador = %player_id%
+    AND id_area_de_morte = %area_m%;
