@@ -175,7 +175,6 @@ CREATE TABLE IF NOT EXISTS consumivel (
     efeito tipo_efeitos NOT NULL,
     qtd_do_efeito INTEGER NOT NULL,
     descricao VARCHAR(200) NOT NULL,
-    duracao INTEGER NOT NULL,
     CONSTRAINT chk_qtd_do_efeito CHECK (qtd_do_efeito >= 1),
     CONSTRAINT chk_duracao CHECK (duracao >= 1)
 );
