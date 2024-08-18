@@ -9,7 +9,7 @@
 -- arma (tem que fazer todos tipos de arma para dar ok)
 -- arma_pesada (ok)
 -- arma_leve (ok)
--- cajado
+-- cajado (ok)
 -- selo
 -- engaste
 -- equipados (ok -> Falta testar)
@@ -968,3 +968,79 @@ SELECT add_cajado (
 	p_proficiencia := 'E'
 );
 
+CREATE OR REPLACE FUNCTION add_selo(
+    p_nome VARCHAR,
+    p_raridade INTEGER,
+    p_valor NUMERIC,
+    p_tipo_item tipo_item,
+    p_tipo_equipamento tipo_equipamento,
+    p_requisitos INTEGER[],
+    p_melhoria INTEGER, 
+    p_peso NUMERIC,
+    p_custo_melhoria NUMERIC,
+    p_habilidade INTEGER,
+	p_dano INTEGER,
+	p_critico INTEGER,
+	p_milagre INTEGER
+) 
+RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id_selo INTEGER;
+BEGIN
+    -- Inserção na tabela item e captura do id_item
+    WITH new_item AS (
+        INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+        VALUES (FALSE, p_raridade, p_nome, p_valor, p_tipo_item)
+        RETURNING id_item
+    )
+    -- Inserção na tabela equipamento com id_item
+    , new_equipamento AS (
+        INSERT INTO equipamento (id_equipamento, tipo)
+        SELECT id_item, p_tipo_equipamento
+        FROM new_item
+        RETURNING id_equipamento
+    )
+    -- Inserção na tabela cajado com id_equipamento e captura do selo
+    INSERT INTO selo (id_selo, requisitos, melhoria, peso, custo_melhoria, habilidade, dano, critico, milagre)
+    SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_milagre
+    FROM new_equipamento
+    RETURNING id_selo INTO v_id_selo;
+
+    -- Retorna o id do cajado inserida
+    RETURN v_id_selo;
+END;
+$$;
+
+SELECT add_selo (
+    p_nome := 'Radagons Soreseal',
+    p_raridade := 5,
+    p_valor := 130,
+    p_tipo_item := 'Equipamento',
+    p_tipo_equipamento := 'Arma',
+    p_requisitos := ARRAY[5, 7 ,6, 9],
+    p_melhoria := 5,
+    p_peso := 2,
+    p_custo_melhoria := 20,
+    p_habilidade := 20,
+	p_dano := 25,
+	p_critico := 30,
+	p_milagre := 4
+);
+
+SELECT add_selo (
+    p_nome := 'Dragon Communion Seal',
+    p_raridade := 4,
+    p_valor := 80,
+    p_tipo_item := 'Equipamento',
+    p_tipo_equipamento := 'Arma',
+    p_requisitos := ARRAY[10, 2 ,6, 7],
+    p_melhoria := 4,
+    p_peso := 1,
+    p_custo_melhoria := 10,
+    p_habilidade := 25,
+	p_dano := 30,
+	p_critico := 40,
+	p_milagre := 3
+);
