@@ -7,7 +7,7 @@
 -- escudo (ok)
 -- armadura (ok)
 -- arma (tem que fazer todos tipos de arma para dar ok)
--- arma_pesada
+-- arma_pesada (ok)
 -- arma_leve (ok)
 -- cajado
 -- selo
@@ -777,13 +777,13 @@ BEGIN
         FROM new_item
         RETURNING id_equipamento
     )
-    -- Inserção na tabela armadura com id_equipamento e captura do id_arma_leve
+    -- Inserção na tabela armadura com id_equipamento e captura do id_armadura
     INSERT INTO armadura (id_armadura, requisitos, melhoria, peso, custo_melhoria, resistencia)
     SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_resistencia
     FROM new_equipamento
     RETURNING id_armadura INTO v_id_armadura;
 
-    -- Retorna o id da arma leve inserida
+    -- Retorna o id da armadura inserida
     RETURN v_id_armadura;
 END;
 $$;
@@ -813,3 +813,81 @@ SELECT add_armadura(
     p_custo_melhoria:= 30,
     p_resistencia := 10
 );
+
+CREATE OR REPLACE FUNCTION add_arma_pesada(
+    p_nome VARCHAR,
+    p_raridade INTEGER,
+    p_valor NUMERIC,
+    p_tipo_item tipo_item,
+    p_tipo_equipamento tipo_equipamento,
+    p_requisitos INTEGER[],
+    p_melhoria INTEGER,
+    p_peso NUMERIC,
+    p_custo_melhoria NUMERIC,
+    p_habilidade INTEGER,
+	p_dano INTEGER,
+	p_critico INTEGER,
+	p_forca INTEGER
+) 
+RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id_arma_pesada INTEGER;
+BEGIN
+    -- Inserção na tabela item e captura do id_item
+    WITH new_item AS (
+        INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+        VALUES (FALSE, p_raridade, p_nome, p_valor, p_tipo_item)
+        RETURNING id_item
+    )
+    -- Inserção na tabela equipamento com id_item
+    , new_equipamento AS (
+        INSERT INTO equipamento (id_equipamento, tipo)
+        SELECT id_item, p_tipo_equipamento
+        FROM new_item
+        RETURNING id_equipamento
+    )
+    -- Inserção na tabela arma pesada com id_equipamento e captura do id_arma_pesada
+    INSERT INTO arma_pesada (id_arma_pesada, requisitos, melhoria, peso, custo_melhoria, habilidade, dano, critico, forca)
+    SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_forca
+    FROM new_equipamento
+    RETURNING id_arma_pesada INTO v_id_arma_pesada;
+
+    -- Retorna o id da arma pesada inserida
+    RETURN v_id_arma_pesada;
+END;
+$$;
+
+SELECT add_arma_pesada (
+    p_nome := 'Velvet Sword of St. Trina',
+    p_raridade := 3,
+    p_valor := 70,
+    p_tipo_item := 'Equipamento',
+    p_tipo_equipamento := 'Arma',
+    p_requisitos := ARRAY[3, 5 ,4, 7],
+    p_melhoria := 8,
+    p_peso := 3,
+    p_custo_melhoria := 20,
+    p_habilidade := 30,
+	p_dano := 20,
+	p_critico := 50,
+	p_forca := 30
+);
+
+SELECT add_arma_pesada (
+    p_nome := 'Sword of Darkness',
+    p_raridade := 4,
+    p_valor := 100,
+    p_tipo_item := 'Equipamento',
+    p_tipo_equipamento := 'Arma',
+    p_requisitos := ARRAY[5, 7 ,6, 9],
+    p_melhoria := 10,
+    p_peso := 4,
+    p_custo_melhoria := 30,
+    p_habilidade := 40,
+	p_dano := 35,
+	p_critico := 60,
+	p_forca := 40
+);
+
