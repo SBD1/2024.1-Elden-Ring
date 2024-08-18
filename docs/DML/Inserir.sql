@@ -1,6 +1,6 @@
 
 -- item (ok)
--- consumivel
+-- consumivel (ok)
 -- inventario (ok -> Falta testar)
 -- instancia_de_item (ok -> Falta testar)
 -- equipamento (tem que fazer todos equipamentos para dar ok)
@@ -670,3 +670,88 @@ VALUES (13, 8, NULL, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
 VALUES (14, NULL, 5, null);
+
+-- CONSUMIVEIS
+
+CREATE OR REPLACE FUNCTION add_consumivel(
+    p_nome VARCHAR,
+    p_raridade INTEGER,
+    p_valor NUMERIC,
+    p_tipo_item tipo_item,
+    p_efeito tipo_efeitos,
+    p_qtd_do_efeito INTEGER,
+    p_descricao VARCHAR
+) 
+RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id_item INTEGER;
+    v_id_consumivel INTEGER;
+BEGIN
+    -- Inserção na tabela item e captura do id_item
+    WITH new_item AS (
+        INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+        VALUES (FALSE, p_raridade, p_nome, p_valor, p_tipo_item)
+        RETURNING id_item
+    )
+    -- Inserção na tabela consumivel com id_item e captura do id_consumivel
+    INSERT INTO consumivel (id_consumivel, efeito, qtd_do_efeito, descricao)
+    SELECT id_item, p_efeito, p_qtd_do_efeito, p_descricao
+    FROM new_item
+    RETURNING id_consumivel INTO v_id_consumivel;
+
+    -- Retorna o id do consumível inserido
+    RETURN v_id_consumivel;
+END;
+$$;
+
+SELECT add_consumivel(
+    p_nome := 'Bênção de Marika',            
+    p_raridade := 3,                         
+    p_valor := 500,                           
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'AumentaVida'::tipo_efeitos,
+    p_qtd_do_efeito := 100,
+    p_descricao := 'Aumenta a vida máxima do jogador em 20 pontos.'
+);
+
+SELECT add_consumivel(
+    p_nome := 'Bênção de Marika',            
+    p_raridade := 3,                         
+    p_valor := 500,                           
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'AumentaVida'::tipo_efeitos,
+    p_qtd_do_efeito := 20,
+    p_descricao := 'Aumenta a vida máxima do jogador em 20 pontos.'
+);
+
+SELECT add_consumivel(
+    p_nome := 'Carne Sagrada Sangrenta',
+    p_raridade := 4,
+    p_valor := 700,
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'AumentaAtaque'::tipo_efeitos,
+    p_qtd_do_efeito := 15,
+    p_descricao := 'Aumenta o dano causado em 15 pontos por um tempo limitado.'
+);
+
+SELECT add_consumivel(
+    p_nome := 'Fígado em conserva à prova de feitiços',
+    p_raridade := 2,
+    p_valor := 150,
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'AumentaDefesa'::tipo_efeitos,
+    p_qtd_do_efeito := 25,
+    p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
+);
+
+SELECT add_consumivel(
+    p_nome := 'Runa Quebrada',
+    p_raridade := 1,
+    p_valor := 10,
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'GanhaRunas'::tipo_efeitos,
+    p_qtd_do_efeito := 5,
+    p_descricao := 'Concede 5 runas ao jogador.'
+);
