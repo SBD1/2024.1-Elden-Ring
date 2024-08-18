@@ -5,7 +5,7 @@
 -- instancia_de_item (ok -> Falta testar)
 -- equipamento (tem que fazer todos equipamentos para dar ok)
 -- escudo (ok)
--- armadura
+-- armadura (ok)
 -- arma (tem que fazer todos tipos de arma para dar ok)
 -- arma_pesada
 -- arma_leve (ok)
@@ -746,12 +746,70 @@ SELECT add_consumivel(
     p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
 );
 
-SELECT add_consumivel(
-    p_nome := 'Runa Quebrada',
-    p_raridade := 1,
-    p_valor := 10,
-    p_tipo_item := 'Consumivel'::tipo_item,
-    p_efeito := 'GanhaRunas'::tipo_efeitos,
-    p_qtd_do_efeito := 5,
-    p_descricao := 'Concede 5 runas ao jogador.'
+CREATE OR REPLACE FUNCTION add_armadura(
+    p_nome VARCHAR,
+    p_raridade INTEGER,
+    p_valor NUMERIC,
+    p_tipo_item tipo_item,
+    p_tipo_equipamento tipo_equipamento,
+    p_requisitos INTEGER[],
+    p_melhoria INTEGER,
+    p_peso NUMERIC,
+    p_custo_melhoria NUMERIC,
+    p_resistencia INTEGER
+) 
+RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id_armadura INTEGER;
+BEGIN
+    -- Inserção na tabela item e captura do id_item
+    WITH new_item AS (
+        INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+        VALUES (FALSE, p_raridade, p_nome, p_valor, p_tipo_item)
+        RETURNING id_item
+    )
+    -- Inserção na tabela equipamento com id_item
+    , new_equipamento AS (
+        INSERT INTO equipamento (id_equipamento, tipo)
+        SELECT id_item, p_tipo_equipamento
+        FROM new_item
+        RETURNING id_equipamento
+    )
+    -- Inserção na tabela armadura com id_equipamento e captura do id_arma_leve
+    INSERT INTO armadura (id_armadura, requisitos, melhoria, peso, custo_melhoria, resistencia)
+    SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_resistencia
+    FROM new_equipamento
+    RETURNING id_armadura INTO v_id_armadura;
+
+    -- Retorna o id da arma leve inserida
+    RETURN v_id_armadura;
+END;
+$$;
+
+SELECT add_armadura(
+    p_nome := 'Armadura de Bode-Touro',
+    p_raridade := 4,
+    p_valor := 150,
+    p_tipo_item := 'Equipamento'::tipo_item,
+    p_tipo_equipamento := 'Armadura'::tipo_equipamento,
+    p_peso := 4,
+    p_requisitos := ARRAY[10, 12,5,6],
+	p_melhoria := 50,
+    p_custo_melhoria:= 100,
+    p_resistencia := 50
+);
+
+SELECT add_armadura(
+    p_nome := 'Conjunto de Cavaleiro Banido',
+    p_raridade := 2,
+    p_valor := 50,
+    p_tipo_item := 'Equipamento'::tipo_item,
+    p_tipo_equipamento := 'Armadura'::tipo_equipamento,
+    p_peso := 4,
+    p_requisitos := ARRAY[6,8,5,6],
+	p_melhoria := 10,
+    p_custo_melhoria:= 30,
+    p_resistencia := 10
 );

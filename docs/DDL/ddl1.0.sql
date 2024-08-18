@@ -10,7 +10,7 @@ CREATE TYPE tipo_item AS ENUM ('Consumivel', 'Equipamento');
 
 CREATE TYPE tipo_proeficiencia AS ENUM ('E', 'D', 'C', 'B', 'A', 'S');
 
-CREATE TYPE tipo_efeitos AS ENUM ('RestauraHp', 'AumentaVida', 'AumentaAtaque', 'AumentaDefesa', 'GanhaRunas');
+CREATE TYPE tipo_efeitos AS ENUM ('RestauraHp', 'AumentaAtaque', 'AumentaDefesa', 'GanhaRunas');
 
 --create type tipo_seccoes AS ENUM('Arma', 'Equipamento', 'Consumivel', '', 'GanhaRunas')
 
