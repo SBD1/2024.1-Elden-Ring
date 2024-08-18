@@ -891,3 +891,80 @@ SELECT add_arma_pesada (
 	p_forca := 40
 );
 
+CREATE OR REPLACE FUNCTION add_cajado(
+    p_nome VARCHAR,
+    p_raridade INTEGER,
+    p_valor NUMERIC,
+    p_tipo_item tipo_item,
+    p_tipo_equipamento tipo_equipamento,
+    p_requisitos INTEGER[],
+    p_melhoria INTEGER, 
+    p_peso NUMERIC,
+    p_custo_melhoria NUMERIC,
+    p_habilidade INTEGER,
+	p_dano INTEGER,
+	p_critico INTEGER,
+	p_proficiencia tipo_proeficiencia
+) 
+RETURNS INTEGER
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_id_cajado INTEGER;
+BEGIN
+    -- Inserção na tabela item e captura do id_item
+    WITH new_item AS (
+        INSERT INTO item (eh_chave, raridade, nome, valor, tipo)
+        VALUES (FALSE, p_raridade, p_nome, p_valor, p_tipo_item)
+        RETURNING id_item
+    )
+    -- Inserção na tabela equipamento com id_item
+    , new_equipamento AS (
+        INSERT INTO equipamento (id_equipamento, tipo)
+        SELECT id_item, p_tipo_equipamento
+        FROM new_item
+        RETURNING id_equipamento
+    )
+    -- Inserção na tabela cajado com id_equipamento e captura do id_cajado
+    INSERT INTO cajado (id_cajado, requisitos, melhoria, peso, custo_melhoria, habilidade, dano, critico, proficiencia)
+    SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_proficiencia
+    FROM new_equipamento
+    RETURNING id_cajado INTO v_id_cajado;
+
+    -- Retorna o id do cajado inserida
+    RETURN v_id_cajado;
+END;
+$$;
+
+SELECT add_cajado (
+    p_nome := 'Lusats Glintstone Staff',
+    p_raridade := 4,
+    p_valor := 100,
+    p_tipo_item := 'Equipamento',
+    p_tipo_equipamento := 'Arma',
+    p_requisitos := ARRAY[5, 7 ,6, 9],
+    p_melhoria := 10,
+    p_peso := 4,
+    p_custo_melhoria := 30,
+    p_habilidade := 40,
+	p_dano := 35,
+	p_critico := 60,
+	p_proficiencia := 'C'
+);
+
+SELECT add_cajado (
+    p_nome := 'Prince of Deaths Staff',
+    p_raridade := 5,
+    p_valor := 130,
+    p_tipo_item := 'Equipamento',
+    p_tipo_equipamento := 'Arma',
+    p_requisitos := ARRAY[5, 7 ,6, 9],
+    p_melhoria := 5,
+    p_peso := 2,
+    p_custo_melhoria := 20,
+    p_habilidade := 20,
+	p_dano := 25,
+	p_critico := 30,
+	p_proficiencia := 'E'
+);
+
