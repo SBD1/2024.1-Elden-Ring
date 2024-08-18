@@ -10,7 +10,7 @@
 -- arma_pesada (ok)
 -- arma_leve (ok)
 -- cajado (ok)
--- selo
+-- selo (ok)
 -- engaste
 -- equipados (ok -> Falta testar)
 
@@ -711,18 +711,8 @@ SELECT add_consumivel(
     p_raridade := 3,                         
     p_valor := 500,                           
     p_tipo_item := 'Consumivel'::tipo_item,
-    p_efeito := 'AumentaVida'::tipo_efeitos,
+    p_efeito := 'RestauraHp'::tipo_efeitos,
     p_qtd_do_efeito := 100,
-    p_descricao := 'Aumenta a vida máxima do jogador em 20 pontos.'
-);
-
-SELECT add_consumivel(
-    p_nome := 'Bênção de Marika',            
-    p_raridade := 3,                         
-    p_valor := 500,                           
-    p_tipo_item := 'Consumivel'::tipo_item,
-    p_efeito := 'AumentaVida'::tipo_efeitos,
-    p_qtd_do_efeito := 20,
     p_descricao := 'Aumenta a vida máxima do jogador em 20 pontos.'
 );
 
@@ -746,6 +736,26 @@ SELECT add_consumivel(
     p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
 );
 
+SELECT add_consumivel(
+    p_nome := 'Fígado em conserva à prova de feitiços',
+    p_raridade := 2,
+    p_valor := 150,
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'AumentaDefesa'::tipo_efeitos,
+    p_qtd_do_efeito := 25,
+    p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
+);
+SELECT add_consumivel(
+    p_nome := 'Fígado em conserva à prova de feitiços',
+    p_raridade := 2,
+    p_valor := 150,
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'GanhaRunas'::tipo_efeitos,
+    p_qtd_do_efeito := 25,
+    p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
+);
+
+
 CREATE OR REPLACE FUNCTION add_armadura(
     p_nome VARCHAR,
     p_raridade INTEGER,
@@ -756,7 +766,8 @@ CREATE OR REPLACE FUNCTION add_armadura(
     p_melhoria INTEGER,
     p_peso NUMERIC,
     p_custo_melhoria NUMERIC,
-    p_resistencia INTEGER
+    p_resistencia INTEGER,
+     p_atributo_extra INTEGER
 ) 
 RETURNS INTEGER
 LANGUAGE plpgsql
@@ -783,6 +794,10 @@ BEGIN
     FROM new_equipamento
     RETURNING id_armadura INTO v_id_armadura;
 
+    -- Inserção na tabela engaste com id_arma sendo o id da armadura
+    INSERT INTO engaste (id_arma, atributo_extra)
+    VALUES (v_id_armadura, p_atributo_extra);
+
     -- Retorna o id da armadura inserida
     RETURN v_id_armadura;
 END;
@@ -798,7 +813,8 @@ SELECT add_armadura(
     p_requisitos := ARRAY[10, 12,5,6],
 	p_melhoria := 50,
     p_custo_melhoria:= 100,
-    p_resistencia := 50
+    p_resistencia := 50,
+    p_atributo_extra := 5 
 );
 
 SELECT add_armadura(
@@ -811,7 +827,8 @@ SELECT add_armadura(
     p_requisitos := ARRAY[6,8,5,6],
 	p_melhoria := 10,
     p_custo_melhoria:= 30,
-    p_resistencia := 10
+    p_resistencia := 10,
+    p_atributo_extra := 4
 );
 
 CREATE OR REPLACE FUNCTION add_arma_pesada(
@@ -827,7 +844,8 @@ CREATE OR REPLACE FUNCTION add_arma_pesada(
     p_habilidade INTEGER,
 	p_dano INTEGER,
 	p_critico INTEGER,
-	p_forca INTEGER
+	p_forca INTEGER,
+    p_atributo_extra INTEGER
 ) 
 RETURNS INTEGER
 LANGUAGE plpgsql
@@ -854,6 +872,10 @@ BEGIN
     FROM new_equipamento
     RETURNING id_arma_pesada INTO v_id_arma_pesada;
 
+    -- Inserção na tabela engaste com id_arma sendo o id da arma pesada
+    INSERT INTO engaste (id_arma, atributo_extra)
+    VALUES (v_id_arma_pesada, p_atributo_extra);
+
     -- Retorna o id da arma pesada inserida
     RETURN v_id_arma_pesada;
 END;
@@ -872,7 +894,8 @@ SELECT add_arma_pesada (
     p_habilidade := 30,
 	p_dano := 20,
 	p_critico := 50,
-	p_forca := 30
+	p_forca := 30,
+    p_atributo_extra := 5 
 );
 
 SELECT add_arma_pesada (
@@ -888,7 +911,8 @@ SELECT add_arma_pesada (
     p_habilidade := 40,
 	p_dano := 35,
 	p_critico := 60,
-	p_forca := 40
+	p_forca := 40,
+    p_atributo_extra := 2
 );
 
 CREATE OR REPLACE FUNCTION add_cajado(
@@ -904,7 +928,8 @@ CREATE OR REPLACE FUNCTION add_cajado(
     p_habilidade INTEGER,
 	p_dano INTEGER,
 	p_critico INTEGER,
-	p_proficiencia tipo_proeficiencia
+	p_proficiencia tipo_proeficiencia,
+    p_atributo_extra INTEGER
 ) 
 RETURNS INTEGER
 LANGUAGE plpgsql
@@ -931,6 +956,10 @@ BEGIN
     FROM new_equipamento
     RETURNING id_cajado INTO v_id_cajado;
 
+    -- Inserção na tabela engaste com id_arma sendo o id do cajado
+    INSERT INTO engaste (id_arma, atributo_extra)
+    VALUES (v_id_cajado, p_atributo_extra);
+
     -- Retorna o id do cajado inserida
     RETURN v_id_cajado;
 END;
@@ -949,7 +978,8 @@ SELECT add_cajado (
     p_habilidade := 40,
 	p_dano := 35,
 	p_critico := 60,
-	p_proficiencia := 'C'
+	p_proficiencia := 'C',
+    p_atributo_extra := 5 
 );
 
 SELECT add_cajado (
@@ -965,7 +995,8 @@ SELECT add_cajado (
     p_habilidade := 20,
 	p_dano := 25,
 	p_critico := 30,
-	p_proficiencia := 'E'
+	p_proficiencia := 'E',
+    p_atributo_extra := 2
 );
 
 CREATE OR REPLACE FUNCTION add_selo(
@@ -981,7 +1012,9 @@ CREATE OR REPLACE FUNCTION add_selo(
     p_habilidade INTEGER,
 	p_dano INTEGER,
 	p_critico INTEGER,
-	p_milagre INTEGER
+	p_milagre INTEGER,
+    p_atributo_extra INTEGER
+
 ) 
 RETURNS INTEGER
 LANGUAGE plpgsql
@@ -1008,6 +1041,10 @@ BEGIN
     FROM new_equipamento
     RETURNING id_selo INTO v_id_selo;
 
+    -- Inserção na tabela engaste com id_arma sendo o id do selo
+    INSERT INTO engaste (id_arma, atributo_extra)
+    VALUES (v_id_selo, p_atributo_extra);
+
     -- Retorna o id do cajado inserida
     RETURN v_id_selo;
 END;
@@ -1026,7 +1063,8 @@ SELECT add_selo (
     p_habilidade := 20,
 	p_dano := 25,
 	p_critico := 30,
-	p_milagre := 4
+	p_milagre := 4,
+    p_atributo_extra := 1
 );
 
 SELECT add_selo (
@@ -1042,5 +1080,6 @@ SELECT add_selo (
     p_habilidade := 25,
 	p_dano := 30,
 	p_critico := 40,
-	p_milagre := 3
+	p_milagre := 3,
+    p_atributo_extra := 3 
 );

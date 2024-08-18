@@ -160,15 +160,15 @@ CREATE TABLE IF NOT EXISTS item (
     id_item SERIAL PRIMARY KEY,
     eh_chave BOOLEAN NOT NULL,
     raridade INTEGER NOT NULL,
-    nome CHAR(25) NOT NULL,
+    nome CHAR(50) NOT NULL,
     valor INTEGER,
     tipo tipo_item,
     CHECK (
     	(eh_chave = TRUE AND tipo IS NULL) OR 
     	(eh_chave = FALSE AND tipo IS NOT NULL) OR 
     	(eh_chave = FALSE AND tipo is NULL)
-    )
-    CONSTRAINT chk_raridade CHECK (raridade >= 1 AND raridade <= 5),
+    ),
+    CONSTRAINT chk_raridade CHECK (raridade >= 1 AND raridade <= 5)
 );
 
 CREATE TABLE IF NOT EXISTS consumivel (
@@ -176,8 +176,7 @@ CREATE TABLE IF NOT EXISTS consumivel (
     efeito tipo_efeitos NOT NULL,
     qtd_do_efeito INTEGER NOT NULL,
     descricao VARCHAR(200) NOT NULL,
-    CONSTRAINT chk_qtd_do_efeito CHECK (qtd_do_efeito >= 1),
-    CONSTRAINT chk_duracao CHECK (duracao >= 1)
+    CONSTRAINT chk_qtd_do_efeito CHECK (qtd_do_efeito >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS instancia_de_item (
