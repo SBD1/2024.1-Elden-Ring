@@ -29,7 +29,7 @@ Maurício Serrano.
 * [Atualização do Mapeamento](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Mapeamento/mapeamento_final_corrigido.drawio.png)
 * [Criação das Tabeças (DDL)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DDL/ddl1.0.sql)
 * [Insert (DML)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DML/Inserir.sql)
-* [Selects](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DicionarioDados-EldenRing.pdf)
+* [Selects](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Selects/Selects.sql)
 * [Updates (DML)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Selects/Selects.sql)
 * [Jogo Inicio (Andar pelo mapa)](https://github.com/SBD1/2024.1-Elden-Ring/tree/main/jogo)
 * [Apresentação](aa)
