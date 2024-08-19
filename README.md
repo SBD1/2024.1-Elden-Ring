@@ -23,13 +23,26 @@ Maurício Serrano.
 * [Mapeamento](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Mapeamento/mapeamento_final.png)
 * [Dicionário de Dados](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DicionarioDados-EldenRing.pdf)
 * [Apresentação](https://youtu.be/X5gtIR1n0aY)
+
+### 2ª Entrega 
+* [Atualização do DER](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DER/DERv6-Final-Corrigido.drawio.png)
+* [Atualização do Mapeamento](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Mapeamento/mapeamento_final_corrigido.drawio.png)
+* [Criação das Tabeças (DDL)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DDL/ddl1.0.sql)
+* [Insert (DML)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DML/Inserir.sql)
+* [Selects](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DicionarioDados-EldenRing.pdf)
+* [Updates (DML)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Selects/Selects.sql)
+* [Jogo Inicio (Andar pelo mapa)](https://github.com/SBD1/2024.1-Elden-Ring/tree/main/jogo)
+* [Apresentação](aa)
+
+
 #### Ferramentas Utilizadas:
 
 <div style="display:flex;">
   <img src="https://github.com/user-attachments/assets/2e834e79-9d7c-45dc-9ea6-f93579a7e6fc" alt="images__1_-removebg-preview" style="width:10%; height:auto;">
 
 <!--[![My Skills](https://skillicons.dev/icons?i=&theme=light)](https://skillicons.dev) -->
-  
+
+
 </div>
 
 ## 👾 Contribuidores
