@@ -32,7 +32,7 @@ Maurício Serrano.
 * [Selects](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/Selects/Selects.sql)
 * [Updates (DML)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DML/Update.sql)
 * [Jogo Inicio (Andar pelo mapa)](https://github.com/SBD1/2024.1-Elden-Ring/tree/main/jogo)
-* [Apresentação](aa)
+* [Apresentação](https://youtu.be/8GZPNs6pBgc)
 
 
 #### Ferramentas Utilizadas:
