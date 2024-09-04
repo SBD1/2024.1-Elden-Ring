@@ -4,11 +4,11 @@ CREATE TYPE tipo_atk AS ENUM ('Fogo', 'Raio', 'Magia', 'Cortante', 'Contusao');
 
 CREATE TYPE tipo_p AS ENUM ('Jogavel', 'Njogavel');
 
-CREATE TYPE tipo_equipamento AS ENUM ('Escudo', 'Arma', 'Armadura');
+CREATE TYPE tipo_equipamento AS ENUM ('Escudo', 'Pesada', 'Leve', 'Cajado', 'Selo', 'Armadura');
 
 CREATE TYPE tipo_item AS ENUM ('Consumivel', 'Equipamento');
 
-CREATE TYPE tipo_proeficiencia AS ENUM ('E', 'D', 'C', 'B', 'A', 'S');
+CREATE TYPE tipo_proficiencia AS ENUM ('E', 'D', 'C', 'B', 'A', 'S');
 
 CREATE TYPE tipo_efeitos AS ENUM ('RestauraHp', 'AumentaAtaque', 'AumentaDefesa', 'GanhaRunas');
 
@@ -119,6 +119,8 @@ CREATE TABLE IF NOT EXISTS jogador (
     stamina INTEGER NOT NULL,
     mp INTEGER NOT NULL,
     nivel_atual INTEGER NOT NULL,
+    st_atual INTEGER NOT NULL,
+    hp_atual INTEGER NOT NULL,
     CONSTRAINT chk_hp CHECK (hp >= 1),
     CONSTRAINT chk_nivel_atual CHECK (nivel_atual >= 1),
     CONSTRAINT chk_vigor CHECK (vigor >= 1),
@@ -239,14 +241,13 @@ CREATE TABLE IF NOT EXISTS arma_pesada (
     habilidade INTEGER NOT NULL,
     dano INTEGER NOT NULL,
     critico INTEGER,
-    forca INTEGER NOT NULL,
+    forca tipo_proficiencia NOT NULL,
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
     CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
     CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     CONSTRAINT chk_dano CHECK (dano >= 1),
-    CONSTRAINT chk_critico CHECK (critico >= 1),
-    CONSTRAINT chk_forca CHECK (forca >= 1)
+    CONSTRAINT chk_critico CHECK (critico >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS arma_leve (
@@ -258,12 +259,11 @@ CREATE TABLE IF NOT EXISTS arma_leve (
     habilidade INTEGER NOT NULL,
     dano INTEGER NOT NULL,
     critico INTEGER,
-    destreza INTEGER NOT NULL,
+    destreza tipo_proficiencia NOT NULL,
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
     CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
-    CONSTRAINT chk_destreza CHECK (destreza >= 1)
+    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4)
 );
 
 CREATE TABLE IF NOT EXISTS cajado (
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS cajado (
     habilidade INTEGER NOT NULL,
     dano INTEGER NOT NULL,
     critico INTEGER,
-    proficiencia tipo_proeficiencia NOT null,
+    proficiencia tipo_proficiencia NOT NULL,
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
     CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
@@ -291,12 +291,11 @@ CREATE TABLE IF NOT EXISTS selo (
     habilidade INTEGER NOT NULL,
     dano INTEGER NOT NULL,
     critico INTEGER,
-    milagre INTEGER NOT NULL,
+    milagre tipo_proficiencia NOT NULL,
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
     CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
-    CONSTRAINT chk_milagre CHECK (milagre >= 1)
+    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4)
 );
 
 CREATE TABLE IF NOT EXISTS engaste (
@@ -316,6 +315,7 @@ CREATE TABLE IF NOT EXISTS instancia_npc (
     id_instancia SERIAL PRIMARY KEY,
     id_npc INTEGER NOT NULL,
     id_area INTEGER NOT NULL,
+    hp_atual INTEGER NOT NULL,
     CONSTRAINT fk_npc FOREIGN KEY(id_npc) REFERENCES npc(id_npc),
     CONSTRAINT fk_area FOREIGN KEY(id_area) REFERENCES area(id_area)
 );
@@ -332,4 +332,10 @@ CREATE TABLE IF NOT EXISTS chefes_derrotados (
     id_chefe INTEGER REFERENCES chefe(id_chefe),
     id_jogador INTEGER REFERENCES jogador(id_jogador),
     PRIMARY KEY (id_chefe, id_jogador)
+);
+
+CREATE TABLE IF NOT EXISTS npc_morto (
+    id_jogador INTEGER REFERENCES jogador(id_jogador),
+    id_instancia_npc INTEGER REFERENCES instancia_npc(id_instancia),
+	PRIMARY KEY (id_jogador, id_instancia_npc)
 );

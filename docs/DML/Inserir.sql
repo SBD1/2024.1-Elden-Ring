@@ -80,19 +80,19 @@ $$;
 SELECT add_inimigo(
     'Soldado de Godrick', 250, 40, 
     'Soldado de Godrick', 250, 
-    'Inimigo'::funcao_p, TRUE, 40, 'Cortante'::tipo_atk, 100
+    'Inimigo'::funcao_p, TRUE, 75, 'Cortante'::tipo_atk, 100
 );
 
 SELECT add_inimigo(
     'Soldado', 200, 30, 
     'Soldado', 200, 
-    'Inimigo'::funcao_p, TRUE, 30, 'Cortante'::tipo_atk, 50
+    'Inimigo'::funcao_p, TRUE, 80, 'Cortante'::tipo_atk, 50
 );
 
 SELECT add_inimigo(
     'Cavaleiro de Godrick', 500, 100, 
     'Cavaleiro de Godrick', 500, 
-    'Inimigo'::funcao_p, TRUE, 100, 'Cortante'::tipo_atk, 200
+    'Inimigo'::funcao_p, TRUE, 90, 'Cortante'::tipo_atk, 200
 );
 
 -- CHEFE
@@ -149,35 +149,35 @@ SELECT add_chefe(
     'Godrick, o Senhor', 3500, 500,
     'Lembrança de Godrick', 6000,
     'Godrick, o Senhor', 3500,
-    'Chefe'::funcao_p, TRUE, 300, 'Fogo'::tipo_atk, 6000
+    'Chefe'::funcao_p, TRUE, 100, 'Fogo'::tipo_atk, 6000
 );
 
 SELECT add_chefe(
     'Margit, o Caído', 3000, 350,
     'Lembrança de Margit', 4000,
     'Margit, o Caído', 3000,
-    'Chefe'::funcao_p, TRUE, 300, 'Fogo'::tipo_atk, 4000
+    'Chefe'::funcao_p, TRUE, 110, 'Fogo'::tipo_atk, 4000
 );
 
 SELECT add_chefe(
     'Rennala', 5000, 250,
     'Lembrança de Rennala', 5000,
     'Rennala', 5000,
-    'Chefe'::funcao_p, TRUE, 250, 'Magia'::tipo_atk, 5000
+    'Chefe'::funcao_p, TRUE, 120, 'Magia'::tipo_atk, 5000
 );
 
 SELECT add_chefe(
     'Starscourge Radahn', 8000, 600,
     'Lembrança de Radahn', 7000,
     'Starscourge Radahn', 8000,
-    'Chefe'::funcao_p, TRUE, 600, 'Cortante'::tipo_atk, 7000
+    'Chefe'::funcao_p, TRUE, 130, 'Cortante'::tipo_atk, 7000
 );
 
 SELECT add_chefe(
     'Malenia', 7000, 500,
     'Lembrança de Malenia', 6500,
     'Malenia', 7000,
-    'Chefe'::funcao_p, TRUE, 500, 'Cortante'::tipo_atk, 6500
+    'Chefe'::funcao_p, TRUE, 140, 'Cortante'::tipo_atk, 6500
 );
 
 -- FERREIRO
@@ -322,14 +322,21 @@ INSERT INTO conecta_area (id_origem, id_destino)
 VALUES (4, 3);
 
 -- INSTANCIA NPC 
-INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (1, 3);
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 1, 3, hp
+FROM npc
+WHERE id_npc = 1;
 
-INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (1, 4);
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 1, 4, hp
+FROM npc
+WHERE id_npc = 1;
 
-INSERT INTO instancia_npc (id_npc, id_area)
-VALUES (2, 5);
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 5, hp
+FROM npc
+WHERE id_npc = 2;
+
 
 -- CLASSE
 ---- classes
@@ -428,12 +435,11 @@ VALUES (4, 50, 50);
 INSERT INTO realiza (id_npc, multiplicador, dano_final)
 VALUES (5, 75, 75);
 
--- JOGADOR
 CREATE OR REPLACE FUNCTION add_jogador(
-    p_nome_jogador VARCHAR,
+    p_nome_jogador CHAR(25),
     p_hp INTEGER,
     p_id_nivel INTEGER,
-    p_id_classe VARCHAR,
+    p_id_classe CHAR(14),
     p_id_area INTEGER,
     p_vigor INTEGER,
     p_vitalidade INTEGER,
@@ -460,12 +466,12 @@ BEGIN
     INSERT INTO jogador (
         id_jogador, nome, hp, id_nivel, id_classe, id_area,
         vigor, vitalidade, intel, fe, destreza, forca,
-        peso_max, stamina, mp, nivel_atual
+        peso_max, stamina, mp, nivel_atual, st_atual, hp_atual
     )
     VALUES (
         v_id_personagem, p_nome_jogador, p_hp, p_id_nivel, p_id_classe, p_id_area,
         p_vigor, p_vitalidade, p_intel, p_fe, p_destreza, p_forca,
-        p_peso_max, p_stamina, p_mp, p_nivel_atual
+        p_peso_max, p_stamina, p_mp, p_nivel_atual, p_stamina, p_hp
     )
     RETURNING id_jogador INTO v_id_jogador;
 
@@ -614,7 +620,7 @@ CREATE OR REPLACE FUNCTION add_arma_leve(
     p_habilidade INTEGER,
     p_dano INTEGER,
     p_critico INTEGER,
-    p_destreza INTEGER
+    p_destreza tipo_proficiencia
 ) 
 RETURNS INTEGER
 LANGUAGE plpgsql
@@ -647,18 +653,18 @@ END;
 $$;
 
 SELECT add_arma_leve(
-    'Rios de Sangue', 5, 1000, 'Equipamento'::tipo_item, 'Arma'::tipo_equipamento,
-    ARRAY[1, 1, 18, 12], 0, 6.5, 8, 90, 76, 100, 18
+    'Rios de Sangue', 5, 1000, 'Equipamento'::tipo_item, 'Leve'::tipo_equipamento,
+    ARRAY[1, 1, 18, 12], 0, 6.5, 8, 90, 76, 100, 'B'::tipo_proficiencia
 ) AS id_arma_leve;
 
 SELECT add_arma_leve(
-    'Uchigatana', 4, 1500, 'Equipamento'::tipo_item, 'Arma'::tipo_equipamento,
-    ARRAY[1, 1, 15, 11], 0, 5.5, 9, 95, 115, 100, 15
+    'Uchigatana', 4, 1500, 'Equipamento'::tipo_item, 'Leve'::tipo_equipamento,
+    ARRAY[1, 1, 15, 11], 0, 5.5, 9, 95, 115, 100, 'A'::tipo_proficiencia
 ) AS id_arma_leve;
 
 SELECT add_arma_leve(
-    'Esp. Amaldi. de Morgott', 5, 1200, 'Equipamento'::tipo_item, 'Arma'::tipo_equipamento,
-    ARRAY[1, 1, 35, 14], 0, 6.5, 8, 100, 120, 100, 35
+    'Esp. Amaldi. de Morgott', 5, 1200, 'Equipamento'::tipo_item, 'Leve'::tipo_equipamento,
+    ARRAY[1, 1, 35, 14], 0, 6.5, 8, 100, 120, 100, 'C'::tipo_proficiencia
 ) AS id_arma_leve;
 
 -- EQUIPADOS -> SO PODE SER TESTADO DEPOIS DE COLOCAR O JOGADORES E TODOS EQUIPAMENTOS
@@ -844,7 +850,7 @@ CREATE OR REPLACE FUNCTION add_arma_pesada(
     p_habilidade INTEGER,
 	p_dano INTEGER,
 	p_critico INTEGER,
-	p_forca INTEGER,
+	p_forca tipo_proficiencia,
     p_atributo_extra INTEGER
 ) 
 RETURNS INTEGER
@@ -886,7 +892,7 @@ SELECT add_arma_pesada (
     p_raridade := 3,
     p_valor := 70,
     p_tipo_item := 'Equipamento',
-    p_tipo_equipamento := 'Arma',
+    p_tipo_equipamento := 'Pesada',
     p_requisitos := ARRAY[3, 5 ,4, 7],
     p_melhoria := 8,
     p_peso := 3,
@@ -894,7 +900,7 @@ SELECT add_arma_pesada (
     p_habilidade := 30,
 	p_dano := 20,
 	p_critico := 50,
-	p_forca := 30,
+	p_forca := 'C'::tipo_proficiencia,
     p_atributo_extra := 5 
 );
 
@@ -903,7 +909,7 @@ SELECT add_arma_pesada (
     p_raridade := 4,
     p_valor := 100,
     p_tipo_item := 'Equipamento',
-    p_tipo_equipamento := 'Arma',
+    p_tipo_equipamento := 'Pesada',
     p_requisitos := ARRAY[5, 7 ,6, 9],
     p_melhoria := 10,
     p_peso := 4,
@@ -911,7 +917,7 @@ SELECT add_arma_pesada (
     p_habilidade := 40,
 	p_dano := 35,
 	p_critico := 60,
-	p_forca := 40,
+	p_forca := 'A'::tipo_proficiencia,
     p_atributo_extra := 2
 );
 
@@ -928,7 +934,7 @@ CREATE OR REPLACE FUNCTION add_cajado(
     p_habilidade INTEGER,
 	p_dano INTEGER,
 	p_critico INTEGER,
-	p_proficiencia tipo_proeficiencia,
+	p_proficiencia tipo_proficiencia,
     p_atributo_extra INTEGER
 ) 
 RETURNS INTEGER
@@ -970,7 +976,7 @@ SELECT add_cajado (
     p_raridade := 4,
     p_valor := 100,
     p_tipo_item := 'Equipamento',
-    p_tipo_equipamento := 'Arma',
+    p_tipo_equipamento := 'Cajado',
     p_requisitos := ARRAY[5, 7 ,6, 9],
     p_melhoria := 10,
     p_peso := 4,
@@ -987,7 +993,7 @@ SELECT add_cajado (
     p_raridade := 5,
     p_valor := 130,
     p_tipo_item := 'Equipamento',
-    p_tipo_equipamento := 'Arma',
+    p_tipo_equipamento := 'Cajado',
     p_requisitos := ARRAY[5, 7 ,6, 9],
     p_melhoria := 5,
     p_peso := 2,
@@ -1012,7 +1018,7 @@ CREATE OR REPLACE FUNCTION add_selo(
     p_habilidade INTEGER,
 	p_dano INTEGER,
 	p_critico INTEGER,
-	p_milagre INTEGER,
+	p_milagre tipo_proficiencia,
     p_atributo_extra INTEGER
 
 ) 
@@ -1055,7 +1061,7 @@ SELECT add_selo (
     p_raridade := 5,
     p_valor := 130,
     p_tipo_item := 'Equipamento',
-    p_tipo_equipamento := 'Arma',
+    p_tipo_equipamento := 'Selo',
     p_requisitos := ARRAY[5, 7 ,6, 9],
     p_melhoria := 5,
     p_peso := 2,
@@ -1063,7 +1069,7 @@ SELECT add_selo (
     p_habilidade := 20,
 	p_dano := 25,
 	p_critico := 30,
-	p_milagre := 4,
+	p_milagre := 'C'::tipo_proficiencia,
     p_atributo_extra := 1
 );
 
@@ -1072,7 +1078,7 @@ SELECT add_selo (
     p_raridade := 4,
     p_valor := 80,
     p_tipo_item := 'Equipamento',
-    p_tipo_equipamento := 'Arma',
+    p_tipo_equipamento := 'Selo',
     p_requisitos := ARRAY[10, 2 ,6, 7],
     p_melhoria := 4,
     p_peso := 1,
@@ -1080,6 +1086,6 @@ SELECT add_selo (
     p_habilidade := 25,
 	p_dano := 30,
 	p_critico := 40,
-	p_milagre := 3,
+	p_milagre := 'A'::tipo_proficiencia,
     p_atributo_extra := 3 
 );
