@@ -121,6 +121,8 @@ CREATE TABLE IF NOT EXISTS jogador (
     nivel_atual INTEGER NOT NULL,
     st_atual INTEGER NOT NULL,
     hp_atual INTEGER NOT NULL,
+    runas_atuais INTEGER NOT NULL,
+    CONSTRAINT chk_runas CHECK (runas_atuais >= 0),
     CONSTRAINT chk_hp CHECK (hp >= 1),
     CONSTRAINT chk_nivel_atual CHECK (nivel_atual >= 1),
     CONSTRAINT chk_vigor CHECK (vigor >= 1),
