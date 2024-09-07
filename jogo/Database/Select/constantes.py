@@ -46,3 +46,27 @@ AREAS_CONECTADAS = """
     where 
         id_origem = %s;
     """
+
+INFO_ITENS_JOGADOR = """
+    SELECT 
+        i.id_instancia_item,
+        it.nome AS nome_item,
+        it.tipo as tipo_item,
+        CASE
+            WHEN c.id_consumivel IS NOT NULL THEN 'consumivel'
+            WHEN e.id_equipamento IS NOT NULL THEN 'equipamento'
+            ELSE 'outro'
+        END AS categoria_item
+    FROM 
+        instancia_de_item i
+    JOIN 
+        item it ON i.id_item = it.id_item
+    LEFT JOIN 
+        consumivel c ON it.id_item = c.id_consumivel
+    LEFT JOIN 
+        equipamento e ON it.id_item = e.id_equipamento
+    JOIN 
+        localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+    WHERE 
+        l.inventario_jogador = %s;
+"""
