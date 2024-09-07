@@ -207,7 +207,10 @@ CREATE TABLE IF NOT EXISTS equipamento (
 
 CREATE TABLE IF NOT EXISTS escudo (
     id_escudo INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
-    requisitos INTEGER[],
+    req_int INTEGER NOT NULL,
+    req_forca INTEGER NOT NULL,
+    req_fe INTEGER NOT NULL,
+    req_dex INTEGER NOT NULL,
     melhoria INTEGER NOT NULL,
     peso INTEGER NOT NULL,
     custo_melhoria INTEGER NOT NULL,
@@ -216,13 +219,15 @@ CREATE TABLE IF NOT EXISTS escudo (
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
     CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     CONSTRAINT chk_defesa CHECK (defesa >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS armadura (
     id_armadura INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
-    requisitos INTEGER[],
+    req_int INTEGER NOT NULL,
+    req_forca INTEGER NOT NULL,
+    req_fe INTEGER NOT NULL,
+    req_dex INTEGER NOT NULL,
     melhoria INTEGER NOT NULL,
     peso INTEGER NOT NULL,
     custo_melhoria INTEGER NOT NULL,
@@ -230,13 +235,15 @@ CREATE TABLE IF NOT EXISTS armadura (
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
     CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     CONSTRAINT chk_resistencia CHECK (resistencia >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS arma_pesada (
     id_arma_pesada INTEGER PRIMARY KEY REFERENCES equipamento(id_equipamento),
-    requisitos INTEGER[],
+    req_int INTEGER NOT NULL,
+    req_forca INTEGER NOT NULL,
+    req_fe INTEGER NOT NULL,
+    req_dex INTEGER NOT NULL,
     melhoria INTEGER NOT NULL,
     peso INTEGER NOT NULL,
     custo_melhoria INTEGER NOT NULL,
@@ -247,7 +254,6 @@ CREATE TABLE IF NOT EXISTS arma_pesada (
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
     CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4),
     CONSTRAINT chk_dano CHECK (dano >= 1),
     CONSTRAINT chk_critico CHECK (critico >= 1)
 );
@@ -257,15 +263,17 @@ CREATE TABLE IF NOT EXISTS arma_leve (
     melhoria INTEGER NOT NULL,
     peso INTEGER NOT NULL,
     custo_melhoria INTEGER NOT NULL,
-    requisitos INTEGER[],
+    req_int INTEGER NOT NULL,
+    req_forca INTEGER NOT NULL,
+    req_fe INTEGER NOT NULL,
+    req_dex INTEGER NOT NULL,
     habilidade INTEGER NOT NULL,
     dano INTEGER NOT NULL,
     critico INTEGER,
     destreza tipo_proficiencia NOT NULL,
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
-    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4)
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS cajado (
@@ -273,15 +281,17 @@ CREATE TABLE IF NOT EXISTS cajado (
     melhoria INTEGER NOT NULL,
     peso INTEGER NOT NULL,
     custo_melhoria INTEGER NOT NULL,
-    requisitos INTEGER[],
+    req_int INTEGER NOT NULL,
+    req_forca INTEGER NOT NULL,
+    req_fe INTEGER NOT NULL,
+    req_dex INTEGER NOT NULL,
     habilidade INTEGER NOT NULL,
     dano INTEGER NOT NULL,
     critico INTEGER,
     proficiencia tipo_proficiencia NOT NULL,
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
-    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4)
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS selo (
@@ -289,15 +299,17 @@ CREATE TABLE IF NOT EXISTS selo (
     melhoria INTEGER NOT NULL,
     peso INTEGER NOT NULL,
     custo_melhoria INTEGER NOT NULL,
-    requisitos INTEGER[],
+    req_int INTEGER NOT NULL,
+    req_forca INTEGER NOT NULL,
+    req_fe INTEGER NOT NULL,
+    req_dex INTEGER NOT NULL,
     habilidade INTEGER NOT NULL,
     dano INTEGER NOT NULL,
     critico INTEGER,
     milagre tipo_proficiencia NOT NULL,
     CONSTRAINT chk_melhoria CHECK (melhoria >= 0),
     CONSTRAINT chk_peso CHECK (peso >= 0),
-    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1),
-    CONSTRAINT chk_requisitos CHECK (array_length(requisitos, 1) = 4)
+    CONSTRAINT chk_custo_melhoria CHECK (custo_melhoria >= 1)
 );
 
 CREATE TABLE IF NOT EXISTS engaste (

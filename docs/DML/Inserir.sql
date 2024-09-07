@@ -556,7 +556,10 @@ CREATE OR REPLACE FUNCTION add_escudo(
     p_valor NUMERIC,
     p_tipo_item tipo_item,
     p_tipo_equipamento tipo_equipamento,
-    p_requisitos INTEGER[],
+    p_req_int INTEGER,
+    p_req_forca INTEGER,
+    p_req_fe INTEGER,
+    p_req_dex INTEGER,
     p_melhoria INTEGER,
     p_peso INTEGER,
     p_custo_melhoria INTEGER,
@@ -582,8 +585,8 @@ BEGIN
         FROM new_item
         RETURNING id_equipamento
     )
-    INSERT INTO escudo (id_escudo, habilidade, requisitos, defesa, melhoria, peso, custo_melhoria)
-    SELECT id_equipamento, p_habilidade, p_requisitos, p_defesa, p_melhoria, p_peso, p_custo_melhoria
+    INSERT INTO escudo (id_escudo, habilidade, req_int, req_forca, req_fe, req_dex, defesa, melhoria, peso, custo_melhoria)
+    SELECT id_equipamento, p_habilidade, p_req_int, p_req_forca, p_req_fe, p_req_dex, p_defesa, p_melhoria, p_peso, p_custo_melhoria
     FROM new_equipamento
     RETURNING id_escudo INTO v_id_escudo;
 
@@ -594,17 +597,16 @@ $$;
 
 SELECT add_escudo (
     'Escudo de Ferro', 1, 200, 'Equipamento'::tipo_item, 'Escudo'::tipo_equipamento,
-    ARRAY[1, 1, 1, 14], 0, 5, 2, 40, 100
+    1, 14, 1, 14 , 0, 5, 2, 40, 100
 ) AS id_escudo;
 
 SELECT add_escudo (
-    'Escudo Fumegante', 3, 1000, 'Equipamento'::tipo_item, 'Escudo'::tipo_equipamento,
-    ARRAY[1, 3, 10, 9], 0, 5, 2, 50, 140
+    'Escudo Fumegante', 3, 1000, 'Equipamento'::tipo_item, 'Escudo'::tipo_equipamento, 1, 10, 3, 5, 0, 5, 2, 50, 140
 ) AS id_escudo;
 
 SELECT add_escudo (
     'Escudo do Lorde', 2, 800, 'Equipamento'::tipo_item, 'Escudo'::tipo_equipamento,
-    ARRAY[1, 1, 1, 16], 0, 5, 2, 30, 120
+    1, 16, 1, 1, 0, 5, 2, 30, 120
 ) AS id_escudo;
 
 -- ARMA LEVE
@@ -614,7 +616,10 @@ CREATE OR REPLACE FUNCTION add_arma_leve(
     p_valor NUMERIC,
     p_tipo_item tipo_item,
     p_tipo_equipamento tipo_equipamento,
-    p_requisitos INTEGER[],
+    p_req_int INTEGER,
+    p_req_forca INTEGER,
+    p_req_fe INTEGER,
+    p_req_dex INTEGER,
     p_melhoria INTEGER,
     p_peso NUMERIC,
     p_custo_melhoria NUMERIC,
@@ -643,8 +648,8 @@ BEGIN
         RETURNING id_equipamento
     )
     -- Inserção na tabela arma_leve com id_equipamento e captura do id_arma_leve
-    INSERT INTO arma_leve (id_arma_leve, habilidade, dano, critico, requisitos, melhoria, peso, custo_melhoria, destreza)
-    SELECT id_equipamento, p_habilidade, p_dano, p_critico, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_destreza
+    INSERT INTO arma_leve (id_arma_leve, habilidade, dano, critico, req_int, req_forca, req_fe, req_dex, melhoria, peso, custo_melhoria, destreza)
+    SELECT id_equipamento, p_habilidade, p_dano, p_critico, p_req_int, p_req_forca, p_req_fe, p_req_dex, p_melhoria, p_peso, p_custo_melhoria, p_destreza
     FROM new_equipamento
     RETURNING id_arma_leve INTO v_id_arma_leve;
 
@@ -655,17 +660,17 @@ $$;
 
 SELECT add_arma_leve(
     'Rios de Sangue', 5, 1000, 'Equipamento'::tipo_item, 'Leve'::tipo_equipamento,
-    ARRAY[1, 1, 18, 12], 0, 6.5, 8, 120, 76, 100, 'S'::tipo_proficiencia
+    8, 14, 8, 12 , 0, 6.5, 8, 120, 76, 100, 'S'::tipo_proficiencia
 ) AS id_arma_leve;
 
 SELECT add_arma_leve(
     'Uchigatana', 4, 1500, 'Equipamento'::tipo_item, 'Leve'::tipo_equipamento,
-    ARRAY[1, 1, 15, 11], 0, 5.5, 9, 100, 115, 100, 'A'::tipo_proficiencia
+    1, 11, 1, 15, 0, 5.5, 9, 100, 115, 100, 'A'::tipo_proficiencia
 ) AS id_arma_leve;
 
 SELECT add_arma_leve(
     'Esp. Amaldi. de Morgott', 5, 1200, 'Equipamento'::tipo_item, 'Leve'::tipo_equipamento,
-    ARRAY[1, 1, 35, 14], 0, 6.5, 8, 140, 120, 100, 'B'::tipo_proficiencia
+    1, 15, 1, 16, 0, 6.5, 8, 140, 120, 100, 'B'::tipo_proficiencia
 ) AS id_arma_leve;
 
 -- EQUIPADOS -> SO PODE SER TESTADO DEPOIS DE COLOCAR O JOGADORES E TODOS EQUIPAMENTOS
@@ -769,7 +774,10 @@ CREATE OR REPLACE FUNCTION add_armadura(
     p_valor NUMERIC,
     p_tipo_item tipo_item,
     p_tipo_equipamento tipo_equipamento,
-    p_requisitos INTEGER[],
+    p_req_int INTEGER,
+    p_req_forca INTEGER,
+    p_req_fe INTEGER,
+    p_req_dex INTEGER,
     p_melhoria INTEGER,
     p_peso NUMERIC,
     p_custo_melhoria NUMERIC,
@@ -796,8 +804,8 @@ BEGIN
         RETURNING id_equipamento
     )
     -- Inserção na tabela armadura com id_equipamento e captura do id_armadura
-    INSERT INTO armadura (id_armadura, requisitos, melhoria, peso, custo_melhoria, resistencia)
-    SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_resistencia
+    INSERT INTO armadura (id_armadura, req_int, req_forca, req_fe, req_dex, melhoria, peso, custo_melhoria, resistencia)
+    SELECT id_equipamento, p_req_int, p_req_forca, p_req_fe, p_req_dex, p_melhoria, p_peso, p_custo_melhoria, p_resistencia
     FROM new_equipamento
     RETURNING id_armadura INTO v_id_armadura;
 
@@ -817,7 +825,10 @@ SELECT add_armadura(
     p_tipo_item := 'Equipamento'::tipo_item,
     p_tipo_equipamento := 'Armadura'::tipo_equipamento,
     p_peso := 4,
-    p_requisitos := ARRAY[10, 12,5,6],
+    p_req_int := 5,
+    p_req_forca := 10,
+    p_req_fe := 6,
+    p_req_dex := 12,
 	p_melhoria := 50,
     p_custo_melhoria:= 100,
     p_resistencia := 50,
@@ -831,7 +842,10 @@ SELECT add_armadura(
     p_tipo_item := 'Equipamento'::tipo_item,
     p_tipo_equipamento := 'Armadura'::tipo_equipamento,
     p_peso := 4,
-    p_requisitos := ARRAY[6,8,5,6],
+    p_req_int := 6,
+    p_req_forca := 7,
+    p_req_fe := 6,
+    p_req_dex := 6,
 	p_melhoria := 10,
     p_custo_melhoria:= 30,
     p_resistencia := 10,
@@ -844,7 +858,10 @@ CREATE OR REPLACE FUNCTION add_arma_pesada(
     p_valor NUMERIC,
     p_tipo_item tipo_item,
     p_tipo_equipamento tipo_equipamento,
-    p_requisitos INTEGER[],
+    p_req_int INTEGER,
+    p_req_forca INTEGER,
+    p_req_fe INTEGER,
+    p_req_dex INTEGER,
     p_melhoria INTEGER,
     p_peso NUMERIC,
     p_custo_melhoria NUMERIC,
@@ -874,8 +891,8 @@ BEGIN
         RETURNING id_equipamento
     )
     -- Inserção na tabela arma pesada com id_equipamento e captura do id_arma_pesada
-    INSERT INTO arma_pesada (id_arma_pesada, requisitos, melhoria, peso, custo_melhoria, habilidade, dano, critico, forca)
-    SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_forca
+    INSERT INTO arma_pesada (id_arma_pesada, req_int, req_forca, req_fe, req_dex, melhoria, peso, custo_melhoria, habilidade, dano, critico, forca)
+    SELECT id_equipamento, p_req_int, p_req_forca, p_req_fe, p_req_dex, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_forca
     FROM new_equipamento
     RETURNING id_arma_pesada INTO v_id_arma_pesada;
 
@@ -894,7 +911,10 @@ SELECT add_arma_pesada (
     p_valor := 70,
     p_tipo_item := 'Equipamento',
     p_tipo_equipamento := 'Pesada',
-    p_requisitos := ARRAY[3, 5 ,4, 7],
+    p_req_int := 2,
+    p_req_forca := 8,
+    p_req_fe := 3,
+    p_req_dex := 6,
     p_melhoria := 8,
     p_peso := 3,
     p_custo_melhoria := 20,
@@ -911,7 +931,10 @@ SELECT add_arma_pesada (
     p_valor := 100,
     p_tipo_item := 'Equipamento',
     p_tipo_equipamento := 'Pesada',
-    p_requisitos := ARRAY[5, 7 ,6, 9],
+    p_req_int := 4,
+    p_req_forca := 12,
+    p_req_fe := 4,
+    p_req_dex := 6,
     p_melhoria := 10,
     p_peso := 4,
     p_custo_melhoria := 30,
@@ -928,7 +951,10 @@ CREATE OR REPLACE FUNCTION add_cajado(
     p_valor NUMERIC,
     p_tipo_item tipo_item,
     p_tipo_equipamento tipo_equipamento,
-    p_requisitos INTEGER[],
+    p_req_int INTEGER,
+    p_req_forca INTEGER,
+    p_req_fe INTEGER,
+    p_req_dex INTEGER,
     p_melhoria INTEGER, 
     p_peso NUMERIC,
     p_custo_melhoria NUMERIC,
@@ -958,8 +984,8 @@ BEGIN
         RETURNING id_equipamento
     )
     -- Inserção na tabela cajado com id_equipamento e captura do id_cajado
-    INSERT INTO cajado (id_cajado, requisitos, melhoria, peso, custo_melhoria, habilidade, dano, critico, proficiencia)
-    SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_proficiencia
+    INSERT INTO cajado (id_cajado, req_int, req_forca, req_fe, req_dex, melhoria, peso, custo_melhoria, habilidade, dano, critico, proficiencia)
+    SELECT id_equipamento, p_req_int, p_req_forca, p_req_fe, p_req_dex, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_proficiencia
     FROM new_equipamento
     RETURNING id_cajado INTO v_id_cajado;
 
@@ -978,7 +1004,10 @@ SELECT add_cajado (
     p_valor := 100,
     p_tipo_item := 'Equipamento',
     p_tipo_equipamento := 'Cajado',
-    p_requisitos := ARRAY[5, 7 ,6, 9],
+    p_req_int := 9,
+    p_req_forca := 7,
+    p_req_fe := 6,
+    p_req_dex := 5,
     p_melhoria := 10,
     p_peso := 4,
     p_custo_melhoria := 30,
@@ -995,7 +1024,10 @@ SELECT add_cajado (
     p_valor := 130,
     p_tipo_item := 'Equipamento',
     p_tipo_equipamento := 'Cajado',
-    p_requisitos := ARRAY[5, 7 ,6, 9],
+    p_req_int := 9,
+    p_req_forca := 7,
+    p_req_fe := 6,
+    p_req_dex := 5,
     p_melhoria := 5,
     p_peso := 2,
     p_custo_melhoria := 20,
@@ -1012,7 +1044,10 @@ CREATE OR REPLACE FUNCTION add_selo(
     p_valor NUMERIC,
     p_tipo_item tipo_item,
     p_tipo_equipamento tipo_equipamento,
-    p_requisitos INTEGER[],
+    p_req_int INTEGER,
+    p_req_forca INTEGER,
+    p_req_fe INTEGER,
+    p_req_dex INTEGER,
     p_melhoria INTEGER, 
     p_peso NUMERIC,
     p_custo_melhoria NUMERIC,
@@ -1043,8 +1078,8 @@ BEGIN
         RETURNING id_equipamento
     )
     -- Inserção na tabela cajado com id_equipamento e captura do selo
-    INSERT INTO selo (id_selo, requisitos, melhoria, peso, custo_melhoria, habilidade, dano, critico, milagre)
-    SELECT id_equipamento, p_requisitos, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_milagre
+    INSERT INTO selo (id_selo, req_int, req_forca, req_fe, req_dex, melhoria, peso, custo_melhoria, habilidade, dano, critico, milagre)
+    SELECT id_equipamento, p_req_int, p_req_forca, p_req_fe, p_req_dex, p_melhoria, p_peso, p_custo_melhoria, p_habilidade, p_dano, p_critico, p_milagre
     FROM new_equipamento
     RETURNING id_selo INTO v_id_selo;
 
@@ -1063,7 +1098,10 @@ SELECT add_selo (
     p_valor := 130,
     p_tipo_item := 'Equipamento',
     p_tipo_equipamento := 'Selo',
-    p_requisitos := ARRAY[5, 7 ,6, 9],
+    p_req_int := 5,
+    p_req_forca := 3,
+    p_req_fe := 8,
+    p_req_dex := 5,
     p_melhoria := 5,
     p_peso := 2,
     p_custo_melhoria := 20,
@@ -1080,7 +1118,10 @@ SELECT add_selo (
     p_valor := 80,
     p_tipo_item := 'Equipamento',
     p_tipo_equipamento := 'Selo',
-    p_requisitos := ARRAY[10, 2 ,6, 7],
+    p_req_int := 6,
+    p_req_forca := 2,
+    p_req_fe := 10,
+    p_req_dex := 7,
     p_melhoria := 4,
     p_peso := 1,
     p_custo_melhoria := 10,
