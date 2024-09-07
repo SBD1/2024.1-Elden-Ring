@@ -1185,6 +1185,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_equipamento_inicial ON jogador;
 CREATE TRIGGER trigger_equipamento_inicial
 AFTER INSERT ON jogador
 FOR EACH ROW
@@ -1230,6 +1231,6 @@ $$ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS trigger_validar_equipamentos ON equipados;
 CREATE TRIGGER trigger_validar_equipamentos
-BEFORE INSERT OR UPDATE ON equipados
+BEFORE UPDATE ON equipados
 FOR EACH ROW
 EXECUTE FUNCTION validar_equipamentos();
