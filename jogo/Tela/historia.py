@@ -44,15 +44,3 @@ def maleniaDialogo():
     |    E nunca conheci a derrota."                                                                               |
     ________________________________________________________________________________________________________________
     """
-
-def main():
-    # print(introducao())
-    # Aqui viria a lógica do jogo
-    # input("\nPressione Enter para continuar...\n")  # Pausa entre os diálogos
-    print(rennalaDialogo())
-    input("\nPressione Enter para continuar...\n")  # Pausa entre os diálogos
-    print(maleniaDialogo())
-
-if __name__ == "__main__":
-    main()
-
