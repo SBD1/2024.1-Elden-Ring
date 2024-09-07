@@ -3,6 +3,7 @@ from Database.Select.jogador import info_jogador
 from Classes.jogador import Jogador
 from Tela.andar import Andar
 from Tela.inventario import inventario
+from Tela.equipados import equipados
 
 def escolher_jogador(characters):
     if not characters:
@@ -58,7 +59,7 @@ def menu(conn, jogador):
         elif opcao == '2':
             print("Opção 'Status' selecionada.")
         elif opcao == '3':
-            print("Opção 'Equipados' selecionada.")
+            equipados(conn, jogador.id_jogador)
         elif opcao == '0':
             break  # Volta à selecionar ação
         else:

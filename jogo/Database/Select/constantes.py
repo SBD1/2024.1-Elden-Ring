@@ -66,3 +66,26 @@ INFO_ITENS_JOGADOR = """
     WHERE 
         l.inventario_jogador = %s;
 """
+
+EQUIPADOS_JOGADOR = """
+    SELECT
+        e.id_jogador,
+        COALESCE(i_mao_direita.nome, 'Nenhum') AS mao_direita,
+        COALESCE(i_mao_esquerda.nome, 'Nenhum') AS mao_esquerda,
+        COALESCE(i_armadura.nome, 'Nenhum') AS armadura
+    FROM
+        equipados e
+    LEFT JOIN
+        equipamento eq_mao_direita ON e.mao_direita = eq_mao_direita.id_equipamento
+    LEFT JOIN
+        equipamento eq_mao_esquerda ON e.mao_esquerda = eq_mao_esquerda.id_equipamento
+    LEFT JOIN
+        equipamento eq_armadura ON e.armadura = eq_armadura.id_equipamento
+    LEFT JOIN
+        item i_mao_direita ON eq_mao_direita.id_equipamento = i_mao_direita.id_item
+    LEFT JOIN
+        item i_mao_esquerda ON eq_mao_esquerda.id_equipamento = i_mao_esquerda.id_item
+    LEFT JOIN
+        item i_armadura ON eq_armadura.id_equipamento = i_armadura.id_item
+    where id_jogador = %s;
+ """
