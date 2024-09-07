@@ -7,7 +7,7 @@ def inventario(conn, id_jogador):
         listar_itens = info_inventario(conn, id_jogador)
         
         for i, itens in enumerate(listar_itens, start=1):
-            print(f"{i}. {itens[1]} ({itens[2] if itens[2] else 'N/A'})")
+          print(f"{i}. {itens[1]} ({itens[2] if itens[2] else 'N/A'}{f' - {itens[3]}' if itens[3] else ''})")
         
         print("0. Voltar ao menu")
         opcao = input("Digite o número de um item para ver detalhes: ")
@@ -36,14 +36,14 @@ def exibir_detalhes_item(conn, item_selecionado):
     # print(detalhes)
     if detalhes is None:
         print("Nenhum detalhe encontrado para este item.")
-    elif tipo_item == 'Consumível':
-        print(f"Item: {item_selecionado[1]}")  # Nome do item
+    elif tipo_item == 'Consumivel':
+        print(f"Item: {item_selecionado[1]}")  
         print(f"Descrição: {detalhes[0]}")
         print(f"Efeito: {detalhes[1]}")
         print(f"Quantidade de Efeito: {detalhes[2]}")
     elif tipo_item == 'Equipamento':
         tipo_equipamento = detalhes[0]  # Pegando o tipo de equipamento do resultado do banco
-        print(f"testeeeee: {tipo_equipamento}")
+        # print(f"testeeeee: {tipo_equipamento}")
         if tipo_equipamento == 'Escudo':
             print(f"Escudo: {item_selecionado[1]}")
             print(f"Requisitos: INT: {detalhes[1]}, FORÇA: {detalhes[2]}, FÉ: {detalhes[3]}, DEX: {detalhes[4]}")
@@ -68,7 +68,37 @@ def exibir_detalhes_item(conn, item_selecionado):
             print(f"Habilidade: {detalhes[8]}")
             print(f"Dano: {detalhes[9]}")
             print(f"Crítico: {detalhes[10]}")
-            print(f"Destreza: {detalhes[11]}")
+            print(f"Proficiência Destreza: {detalhes[11]}")
+        elif tipo_equipamento == 'Pesada':
+            print(f"Arma Pesada: {item_selecionado[1]}")
+            print(f"Requisitos: INT: {detalhes[1]}, FORÇA: {detalhes[2]}, FÉ: {detalhes[3]}, DEX: {detalhes[4]}")
+            print(f"Melhoria: {detalhes[5]}")
+            print(f"Peso: {detalhes[6]}")
+            print(f"Custo de Melhoria: {detalhes[7]}")
+            print(f"Habilidade: {detalhes[8]}")
+            print(f"Dano: {detalhes[9]}")
+            print(f"Crítico: {detalhes[10]}")
+            print(f"Proficiência Força: {detalhes[11]}")
+        elif tipo_equipamento == 'Cajado':
+            print(f"Cajado: {item_selecionado[1]}")
+            print(f"Requisitos: INT: {detalhes[1]}, FORÇA: {detalhes[2]}, FÉ: {detalhes[3]}, DEX: {detalhes[4]}")
+            print(f"Melhoria: {detalhes[5]}")
+            print(f"Peso: {detalhes[6]}")
+            print(f"Custo de Melhoria: {detalhes[7]}")
+            print(f"Habilidade: {detalhes[8]}")
+            print(f"Dano: {detalhes[9]}")
+            print(f"Crítico: {detalhes[10]}")
+            print(f"Proficiência Inteligencia: {detalhes[11]}")
+        elif tipo_equipamento == 'Selo':
+            print(f"Selo: {item_selecionado[1]}")
+            print(f"Requisitos: INT: {detalhes[1]}, FORÇA: {detalhes[2]}, FÉ: {detalhes[3]}, DEX: {detalhes[4]}")
+            print(f"Melhoria: {detalhes[5]}")
+            print(f"Peso: {detalhes[6]}")
+            print(f"Custo de Melhoria: {detalhes[7]}")
+            print(f"Habilidade: {detalhes[8]}")
+            print(f"Dano: {detalhes[9]}")
+            print(f"Crítico: {detalhes[10]}")
+            print(f"Proficiência Milagre: {detalhes[11]}")
         else:
             print(f"Equipamento: {item_selecionado[1]}")
             print("Detalhes específicos não foram encontrados para este tipo de equipamento.")

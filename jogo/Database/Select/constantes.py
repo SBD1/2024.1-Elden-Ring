@@ -52,11 +52,7 @@ INFO_ITENS_JOGADOR = """
         i.id_instancia_item,
         it.nome AS nome_item,
         it.tipo as tipo_item,
-        CASE
-            WHEN c.id_consumivel IS NOT NULL THEN 'consumivel'
-            WHEN e.id_equipamento IS NOT NULL THEN 'equipamento'
-            ELSE 'outro'
-        END AS categoria_item
+        e.tipo as tipo_equipamento
     FROM 
         instancia_de_item i
     JOIN 

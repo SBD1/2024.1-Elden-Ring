@@ -43,7 +43,7 @@ def detalhes_item(conn, id_instancia_item, categoria):
             """
             cur.execute(tipo_query, (id_instancia_item,))
             tipo_equipamento = cur.fetchone()
-            print(tipo_equipamento)
+            # print(tipo_equipamento)
             if tipo_equipamento:
                 tipo_equipamento = tipo_equipamento[0]  
                 if tipo_equipamento == 'Escudo':
@@ -85,6 +85,51 @@ def detalhes_item(conn, id_instancia_item, categoria):
                             arma_leve al
                         JOIN 
                             instancia_de_item i ON al.id_arma_leve = i.id_item
+                        JOIN 
+                            equipamento eq ON eq.id_equipamento = i.id_item
+                        WHERE 
+                            i.id_instancia_item = %s;
+                    """
+                elif tipo_equipamento == 'Pesada':
+                    query = """
+                        SELECT 
+                            eq.tipo, ap.req_int, ap.req_forca, ap.req_fe, ap.req_dex, 
+                            ap.melhoria, ap.peso, ap.custo_melhoria, ap.habilidade, 
+                            ap.dano, ap.critico, ap.forca
+                        FROM 
+                            arma_pesada ap
+                        JOIN 
+                            instancia_de_item i ON ap.id_arma_pesada = i.id_item
+                        JOIN 
+                            equipamento eq ON eq.id_equipamento = i.id_item
+                        WHERE 
+                            i.id_instancia_item = %s;
+                    """
+                elif tipo_equipamento == 'Cajado':
+                    query = """
+                        SELECT 
+                            eq.tipo, c.req_int, c.req_forca, c.req_fe, c.req_dex, 
+                            c.melhoria, c.peso, c.custo_melhoria, c.habilidade, 
+                            c.dano, c.critico, c.proficiencia
+                        FROM 
+                            cajado c
+                        JOIN 
+                            instancia_de_item i ON c.id_cajado = i.id_item
+                        JOIN 
+                            equipamento eq ON eq.id_equipamento = i.id_item
+                        WHERE 
+                            i.id_instancia_item = %s;
+                    """
+                elif tipo_equipamento == 'Selo':
+                    query = """
+                        SELECT 
+                            eq.tipo, s.req_int, s.req_forca, s.req_fe, s.req_dex, 
+                            s.melhoria, s.peso, s.custo_melhoria, s.habilidade, 
+                            s.dano, s.critico, s.milagre
+                        FROM 
+                            Selo s
+                        JOIN 
+                            instancia_de_item i ON s.id_selo = i.id_item
                         JOIN 
                             equipamento eq ON eq.id_equipamento = i.id_item
                         WHERE 
