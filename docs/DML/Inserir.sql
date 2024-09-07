@@ -323,17 +323,17 @@ VALUES (4, 3);
 
 -- INSTANCIA NPC 
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 1, 3, hp
+SELECT 1, 2, hp
 FROM npc
 WHERE id_npc = 1;
 
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 1, 4, hp
+SELECT 2, 2, hp
 FROM npc
 WHERE id_npc = 1;
 
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 2, 5, hp
+SELECT 2, 2, hp
 FROM npc
 WHERE id_npc = 2;
 

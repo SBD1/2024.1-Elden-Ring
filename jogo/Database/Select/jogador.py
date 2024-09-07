@@ -13,7 +13,7 @@ def listar_jogadores(conn):
     except Exception as e:
         print(f"Erro ao buscar jogadores: {e}")
         return []
-    
+
 def info_jogador(conn, id_jogador):
     if conn is None:
         return None

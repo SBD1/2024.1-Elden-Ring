@@ -2,6 +2,7 @@ from uteis import clear_screen
 from Database.Select.jogador import info_jogador
 from Classes.jogador import Jogador
 from Tela.andar import Andar
+from Tela.combate import iniciar_combate
 
 def escolher_jogador(characters):
     if not characters:
@@ -35,11 +36,11 @@ def selecionar_acao(conn, jogador_selecionado):
             Andar(conn, jogador.id_jogador, jogador.id_area)
         elif opcao == '3':
             print("Opção 'Iniciar Combate' selecionada.")
+            iniciar_combate(conn, jogador)
         elif opcao == '0':
             break  # Volta à seleção de personagem
         else:
             print("Opção inválida. Tente novamente.")
-        
 
 def menu(conn, jogador):
     while True:
@@ -59,4 +60,3 @@ def menu(conn, jogador):
             break  # Volta à selecionar ação
         else:
             print("Opção inválida. Tente novamente.")
-        
