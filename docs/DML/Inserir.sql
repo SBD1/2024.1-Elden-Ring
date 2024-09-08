@@ -338,6 +338,8 @@ FROM npc
 WHERE id_npc = 2;
 
 
+
+
 -- CLASSE
 ---- classes
 INSERT INTO classe (nome, base_vit, base_vig, base_int, base_fe, base_dex, base_str)
@@ -675,13 +677,13 @@ SELECT add_arma_leve(
 
 -- EQUIPADOS -> SO PODE SER TESTADO DEPOIS DE COLOCAR O JOGADORES E TODOS EQUIPAMENTOS
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (12, 7, 4, null);
+VALUES (12, 18, 4, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (13, 8, NULL, null);
+VALUES (13, 17, NULL, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (14, NULL, 5, null);
+VALUES (14, 21, 5, null);
 
 -- CONSUMIVEIS
 

@@ -74,3 +74,4 @@ class Jogador:
             hp_atual=row[21],
             runas_atuais=row[22]
         )
+        

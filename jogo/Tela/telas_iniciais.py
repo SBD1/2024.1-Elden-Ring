@@ -1,4 +1,6 @@
 from uteis import clear_screen
+import psycopg2
+from psycopg2 import OperationalError
 from Database.Select.jogador import info_jogador
 from Classes.jogador import Jogador
 from Tela.andar import Andar
@@ -25,6 +27,7 @@ def selecionar_acao(conn, jogador_selecionado):
         print("1. Menu")
         print("2. Andar")
         print("3. Iniciar Combate")
+        print("4. Descansar")
         print("0. Voltar a seleção de personagem")
         opcao = input("Digite a ação desejada:")
 
@@ -37,6 +40,17 @@ def selecionar_acao(conn, jogador_selecionado):
         elif opcao == '3':
             print("Opção 'Iniciar Combate' selecionada.")
             iniciar_combate(conn, jogador)
+        elif opcao == '4':
+            print("Você descansou. Seus pontos de vida foram recuperados e seus Frascos de Lágrimas Carmesins foram restaurados.")
+            cur = conn.cursor()
+            cur.execute("UPDATE jogador SET hp_atual = hp WHERE id_jogador = %s;", (jogador.id_jogador,))
+            print("Todos os inimigos comuns derrotados surgiram novamente.")
+            cur.execute("DELETE FROM npc_morto WHERE id_jogador = %s;", (jogador.id_jogador,))
+            
+            conn.commit()
+            cur.close()
+            input("Pressione qualquer tecla para continuar...")
+
         elif opcao == '0':
             break  # Volta à seleção de personagem
         else:
