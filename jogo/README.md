@@ -17,9 +17,9 @@
 
     Para isso, execute o script `docs/DDL/ddl1.0.sql`.
 
-3. Alimente as tabelas do seu banco de dados
+3. Alimente e ajuste as tabelas do seu banco de dados
 
-    Para isso, execute o script `docs/DML/Inserir.sql`.
+    Para isso, execute o script `docs/DML/Inserir.sql` e depois  `docs/Combate/procedures.sql`.
 
 ### Parte 2 - Configurando o Arquivo de Conexão com o Banco de Dados
 
