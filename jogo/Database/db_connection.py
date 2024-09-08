@@ -12,8 +12,8 @@ def create_connection():
             host="localhost",         # Substitua com o endereço do seu servidor
             port="5432",              # Substitua com a porta do seu servidor
             dbname="bd1_elden_ring",  # Substitua com o nome do seu banco de dados
-            user="chifrudo",          # Substitua com o nome do usuário do banco de dados
-            password="1234"           # Substitua com a senha do usuário
+            user="name",          # Substitua com o nome do usuário do banco de dados
+            password="senha"           # Substitua com a senha do usuário
         )
         conn.set_session(autocommit=True)
         # Configura o nível de mensagens do cliente para NOTICE
