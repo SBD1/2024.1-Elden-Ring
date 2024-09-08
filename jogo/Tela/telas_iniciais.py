@@ -9,10 +9,12 @@ def escolher_jogador(characters):
     if not characters:
         print("Nenhum personagem encontrado.")
         return
-
+    numero_de_personagens = len(characters)
     print("Selecione um personagem:")
     for index, (id, nome) in enumerate(characters):
         print(f"{index + 1}. {nome}")
+    print(f"{numero_de_personagens+1}. NOVO PERSONAGEM")
+    return numero_de_personagens
 
 def selecionar_acao(conn, jogador_selecionado):
     while True:
