@@ -61,7 +61,6 @@ def detalhes_item(conn, id_instancia_item, categoria):
                             i.id_instancia_item = %s;
                     """
                 elif tipo_equipamento == 'Armadura':
-                    print("entrou")
                     query = """
                         SELECT 
                             eq.tipo, a.req_int, a.req_forca, a.req_fe, a.req_dex, 

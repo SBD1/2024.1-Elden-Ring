@@ -72,7 +72,10 @@ EQUIPADOS_JOGADOR = """
         e.id_jogador,
         COALESCE(i_mao_direita.nome, 'Nenhum') AS mao_direita,
         COALESCE(i_mao_esquerda.nome, 'Nenhum') AS mao_esquerda,
-        COALESCE(i_armadura.nome, 'Nenhum') AS armadura
+        COALESCE(i_armadura.nome, 'Nenhum') AS armadura,
+        eq_mao_direita.id_equipamento AS id_mao_direita,
+        eq_mao_esquerda.id_equipamento AS id_mao_esquerda,
+        eq_armadura.id_equipamento AS id_armadura
     FROM
         equipados e
     LEFT JOIN
@@ -89,3 +92,63 @@ EQUIPADOS_JOGADOR = """
         item i_armadura ON eq_armadura.id_equipamento = i_armadura.id_item
     where id_jogador = %s;
  """
+
+ARMADURAS_DO_JOGADOR = """
+SELECT 
+    i.id_instancia_item,
+    it.nome AS nome_item,
+    e.tipo as tipo_equipamento,
+    a.resistencia, 
+    a.req_int, 
+    a.req_forca, 
+    a.req_fe, 
+    a.req_dex,
+    e.id_equipamento,
+FROM 
+    instancia_de_item i
+JOIN 
+    item it ON i.id_item = it.id_item
+LEFT JOIN 
+    equipamento e ON it.id_item = e.id_equipamento
+left join
+	armadura a on e.id_equipamento = a.id_armadura
+JOIN 
+    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+WHERE 
+    l.inventario_jogador = %s and e.tipo = 'Armadura';
+"""
+
+EQUIPAMENTO_PARA_AS_MAOS = """
+SELECT 
+    i.id_instancia_item,
+    it.nome AS nome_item,
+    e.tipo AS tipo_equipamento,
+    COALESCE(al.req_int, ap.req_int, es.req_int, ca.req_int, se.req_int) AS req_int,
+    COALESCE(al.req_forca, ap.req_forca, es.req_forca, ca.req_forca, se.req_forca) AS req_forca,
+    COALESCE(al.req_fe, ap.req_fe, es.req_fe, ca.req_fe, se.req_fe) AS req_fe,
+    COALESCE(al.req_dex, ap.req_dex, es.req_dex, ca.req_dex, se.req_dex) AS req_dex,
+    COALESCE(al.dano, ap.dano, ca.dano, se.dano, es.defesa) AS atributo_primario,
+    COALESCE(al.habilidade, ap.habilidade, es.habilidade, ca.habilidade, se.habilidade) AS habilidade,
+    e.id_equipamento
+FROM 
+    instancia_de_item i
+JOIN 
+    item it ON i.id_item = it.id_item
+LEFT JOIN 
+    equipamento e ON it.id_item = e.id_equipamento
+LEFT JOIN 
+    arma_leve al ON e.id_equipamento = al.id_arma_leve
+LEFT JOIN 
+    arma_pesada ap ON e.id_equipamento = ap.id_arma_pesada
+LEFT JOIN 
+    escudo es ON e.id_equipamento = es.id_escudo
+LEFT JOIN 
+    cajado ca ON e.id_equipamento = ca.id_cajado
+LEFT JOIN 
+    selo se ON e.id_equipamento = se.id_selo
+JOIN 
+    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+WHERE 
+    l.inventario_jogador = %s
+    AND e.tipo IN ('Leve', 'Pesada', 'Escudo', 'Cajado', 'Selo');
+"""
