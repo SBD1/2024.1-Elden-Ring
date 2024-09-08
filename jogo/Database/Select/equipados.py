@@ -1,5 +1,5 @@
 
-from Database.Select.constantes import ARMADURAS_DO_JOGADOR, EQUIPADOS_JOGADOR, EQUIPAMENTO_PARA_AS_MAOS
+from Database.Select.constantes import ARMADURAS_DO_JOGADOR, EQUIPADOS_JOGADOR, EQUIPAMENTO_ARMA, EQUIPAMENTO_ESCUDO
 
 def info_equipados(conn, id_jogador):
     if conn is None:
@@ -24,8 +24,10 @@ def equipaveis(conn, id_jogador, tipo_equipamento):
 
         if tipo_equipamento == 'Armadura':
             query = ARMADURAS_DO_JOGADOR;
-        elif tipo_equipamento == 'Mao': 
-            query = EQUIPAMENTO_PARA_AS_MAOS;
+        elif tipo_equipamento == 'MaoD': 
+            query = EQUIPAMENTO_ARMA;
+        elif tipo_equipamento == 'MaoE':
+            query = EQUIPAMENTO_ESCUDO;
         else:
             query = None
 
