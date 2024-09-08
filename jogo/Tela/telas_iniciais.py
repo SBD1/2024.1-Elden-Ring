@@ -2,15 +2,19 @@ from uteis import clear_screen
 from Database.Select.jogador import info_jogador
 from Classes.jogador import Jogador
 from Tela.andar import Andar
+from Tela.inventario import inventario
+from Tela.equipados import equipados
 
 def escolher_jogador(characters):
     if not characters:
         print("Nenhum personagem encontrado.")
         return
-
+    numero_de_personagens = len(characters)
     print("Selecione um personagem:")
     for index, (id, nome) in enumerate(characters):
         print(f"{index + 1}. {nome}")
+    print(f"{numero_de_personagens+1}. NOVO PERSONAGEM")
+    return numero_de_personagens
 
 def selecionar_acao(conn, jogador_selecionado):
     while True:
@@ -45,16 +49,19 @@ def menu(conn, jogador):
     while True:
         clear_screen()
         print(f"Personagem: {jogador.nome_jogador}")  
-        print(f"Localização: {jogador.area_nome} ({jogador.regiao_nome})")   
+        print(f"Localização: {jogador.area_nome}({jogador.regiao_nome})")   
         print("1. Inventario")
         print("2. Status")
+        print("3. Equipados")
         print("0. Voltar as opções de ação")
         opcao = input("Digite à ação desejada:")
 
         if opcao == '1':
-            print("Opção 'Inventario' selecionada.")
+            inventario(conn, jogador.id_jogador)
         elif opcao == '2':
             print("Opção 'Status' selecionada.")
+        elif opcao == '3':
+            equipados(conn, jogador.id_jogador)
         elif opcao == '0':
             break  # Volta à selecionar ação
         else:

@@ -27,3 +27,17 @@ def info_jogador(conn, id_jogador):
     except Exception as e:
         print(f"Erro ao buscar jogador: {e}")
         return None
+    
+def classes_disponiveis(conn): 
+    if conn is None:
+        return []
+
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM classe") 
+        classes = cur.fetchall()
+        cur.close()
+        return classes
+    except Exception as e:
+        print(f"Erro ao buscar classes: {e}")
+        return []

@@ -1131,3 +1131,113 @@ SELECT add_selo (
 	p_milagre := 'A'::tipo_proficiencia,
     p_atributo_extra := 3 
 );
+
+-- PARA USAR NO TRIGGER - EQUIPADOS INICIAIS
+SELECT add_arma_leve(
+    'Espada Longa', 1, 200, 'Equipamento'::tipo_item, 'Leve'::tipo_equipamento,
+    5, 5, 5, 5, 0, 5, 6, 110, 70, 100, 'D'::tipo_proficiencia
+) AS id_arma_leve;
+
+SELECT add_armadura(
+    p_nome := 'Armadura Vagabunda',
+    p_raridade := 1,
+    p_valor := 200,
+    p_tipo_item := 'Equipamento'::tipo_item,
+    p_tipo_equipamento := 'Armadura'::tipo_equipamento,
+    p_peso := 4,
+    p_req_int := 5,
+    p_req_forca := 5,
+    p_req_fe := 5,
+    p_req_dex := 5,
+	p_melhoria := 50,
+    p_custo_melhoria:= 100,
+    p_resistencia := 50,
+    p_atributo_extra := 5 
+);
+
+-- TRIGGER - Adiciona equipamento inicial no jogador
+CREATE OR REPLACE FUNCTION equipamento_inicial()
+RETURNS TRIGGER AS $$
+DECLARE
+    instancia_nova_id INTEGER;
+    instancia_nova_id2 INTEGER;
+BEGIN
+    -- Insere os itens na tabela instancia_de_item
+    INSERT INTO instancia_de_item (id_item) VALUES (23);
+    INSERT INTO instancia_de_item (id_item) VALUES (24);
+
+    -- Obtém os IDs das novas instâncias de item
+    SELECT id_instancia_item INTO instancia_nova_id FROM instancia_de_item WHERE id_item = 23 ORDER BY id_instancia_item DESC LIMIT 1;
+    SELECT id_instancia_item INTO instancia_nova_id2 FROM instancia_de_item WHERE id_item = 24 ORDER BY id_instancia_item DESC LIMIT 1;
+
+    -- Insere as localizações na tabela localização_da_instancia_de_item
+    INSERT INTO localização_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
+    VALUES (instancia_nova_id, NULL, NEW.id_jogador);
+
+    INSERT INTO localização_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
+    VALUES (instancia_nova_id2, NULL, NEW.id_jogador);
+
+    -- Insere os dados na tabela equipados
+    INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
+    VALUES (NEW.id_jogador, 23, NULL, 24);
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trigger_equipamento_inicial ON jogador;
+CREATE TRIGGER trigger_equipamento_inicial
+AFTER INSERT ON jogador
+FOR EACH ROW
+EXECUTE FUNCTION equipamento_inicial();
+
+-- TRIGGER Verificar se equipamento existe no inventario do jogador
+CREATE OR REPLACE FUNCTION validar_equipamentos()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Verifica se o equipamento da mão direita está no inventário do jogador
+    IF NEW.mao_direita IS NOT NULL AND NOT EXISTS (
+        SELECT 1
+        FROM localização_da_instancia_de_item l
+		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
+        JOIN equipamento e ON ii.id_item = e.id_equipamento
+        WHERE e.id_equipamento = NEW.mao_direita
+          AND l.inventario_jogador = NEW.id_jogador
+    ) THEN
+        RAISE EXCEPTION 'Equipamento % (mão direita) não está no inventário do jogador %', NEW.mao_direita, NEW.id_jogador;
+    END IF;
+
+    -- Verifica se o equipamento da mão esquerda está no inventário do jogador
+    IF NEW.mao_esquerda IS NOT NULL AND NOT EXISTS (
+        SELECT 1
+        FROM localização_da_instancia_de_item l
+		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
+        JOIN equipamento e ON ii.id_item = e.id_equipamento
+        WHERE e.id_equipamento = NEW.mao_esquerda
+          AND l.inventario_jogador = NEW.id_jogador
+    ) THEN
+        RAISE EXCEPTION 'Equipamento % (mão esquerda) não está no inventário do jogador %', NEW.mao_esquerda, NEW.id_jogador;
+    END IF;
+
+    -- Verifica se a armadura está no inventário do jogador
+    IF NEW.armadura IS NOT NULL AND NOT EXISTS (
+        SELECT 1
+        FROM localização_da_instancia_de_item l
+		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
+        JOIN equipamento e ON ii.id_item = e.id_equipamento
+        WHERE e.id_equipamento = NEW.armadura
+          AND l.inventario_jogador = NEW.id_jogador
+    ) THEN
+        RAISE EXCEPTION 'Equipamento % (armadura) não está no inventário do jogador %', NEW.armadura, NEW.id_jogador;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+DROP TRIGGER IF EXISTS trigger_validar_equipamentos ON equipados;
+CREATE TRIGGER trigger_validar_equipamentos
+BEFORE UPDATE ON equipados
+FOR EACH ROW
+EXECUTE FUNCTION validar_equipamentos();
