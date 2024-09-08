@@ -58,3 +58,17 @@ def ataca_com_equipamento(conn, id_jogador, id_instancia_npc, id_equipamento, ti
         conn.rollback()  # Rollback em caso de erro
     except psycopg2.Warning as w:
         print(f"Aviso: {w}")
+    
+def classes_disponiveis(conn): 
+    if conn is None:
+        return []
+
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM classe") 
+        classes = cur.fetchall()
+        cur.close()
+        return classes
+    except Exception as e:
+        print(f"Erro ao buscar classes: {e}")
+        return []
