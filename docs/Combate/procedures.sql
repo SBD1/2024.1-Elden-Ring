@@ -258,3 +258,38 @@ CREATE OR REPLACE TRIGGER update_jogador
 BEFORE UPDATE ON jogador
 FOR EACH ROW EXECUTE PROCEDURE update_jogador();
 
+CREATE OR REPLACE FUNCTION npcs_na_area(v_id_area INTEGER, v_id_jogador INTEGER)
+RETURNS TABLE(id_instancia INTEGER, nome_npc VARCHAR, hp_atual INTEGER, funcao_npc funcao_p) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        i.id_instancia, 
+        n.nome AS nome_npc, 
+        i.hp_atual, 
+        fn.funcao 
+    FROM 
+        instancia_npc i
+    JOIN 
+        npc n ON i.id_npc = n.id_npc
+    JOIN 
+        funcao_npc fn ON n.funcao = fn.id_funcao
+    WHERE 
+        i.id_area = v_id_area
+        AND i.hp_atual > 0  -- NPCs vivos
+        AND NOT EXISTS (  -- Exclui NPCs já derrotados
+            SELECT 1 
+            FROM npc_morto nm 
+            WHERE nm.id_instancia_npc = i.id_instancia 
+            AND nm.id_jogador = v_id_jogador
+        )
+        AND NOT EXISTS (  -- Exclui Chefes já derrotados
+            SELECT 1 
+            FROM chefes_derrotados cd 
+            WHERE cd.id_chefe = n.id_npc 
+            AND cd.id_jogador = v_id_jogador
+        );
+END;
+$$;
+

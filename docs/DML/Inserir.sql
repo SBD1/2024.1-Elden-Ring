@@ -323,19 +323,21 @@ VALUES (4, 3);
 
 -- INSTANCIA NPC 
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 1, 3, hp
+SELECT 1, 2, hp
 FROM npc
 WHERE id_npc = 1;
 
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 1, 4, hp
+SELECT 2, 2, hp
 FROM npc
 WHERE id_npc = 1;
 
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 2, 5, hp
+SELECT 2, 2, hp
 FROM npc
 WHERE id_npc = 2;
+
+
 
 
 -- CLASSE
@@ -675,13 +677,13 @@ SELECT add_arma_leve(
 
 -- EQUIPADOS -> SO PODE SER TESTADO DEPOIS DE COLOCAR O JOGADORES E TODOS EQUIPAMENTOS
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (12, 7, 4, null);
+VALUES (12, 18, 4, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (13, 8, NULL, null);
+VALUES (13, 17, NULL, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (14, NULL, 5, null);
+VALUES (14, 21, 5, null);
 
 -- CONSUMIVEIS
 
@@ -757,6 +759,7 @@ SELECT add_consumivel(
     p_qtd_do_efeito := 25,
     p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
 );
+
 SELECT add_consumivel(
     p_nome := 'Fígado em conserva à prova de feitiços',
     p_raridade := 2,
@@ -767,6 +770,15 @@ SELECT add_consumivel(
     p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
 );
 
+SELECT add_consumivel(
+    p_nome := 'Frasco de Lágrimas Carmesins',            
+    p_raridade := 1,                         
+    p_valor := 0,                           
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'RestauraHp'::tipo_efeitos,
+    p_qtd_do_efeito := 100,
+    p_descricao := 'Um frasco que restaura 30% do HP quando usado.'
+);
 
 CREATE OR REPLACE FUNCTION add_armadura(
     p_nome VARCHAR,

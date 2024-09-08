@@ -19,7 +19,10 @@ INFO_JOGADOR = """
         classe.nome AS classe_nome,
         jogador.id_area,
         area.nome AS area_nome,
-        regiao.nome AS regiao_nome
+        regiao.nome AS regiao_nome,
+        jogador.st_atual,
+        jogador.hp_atual,
+        jogador.runas_atuais
     FROM 
         jogador
     LEFT JOIN 
@@ -46,6 +49,35 @@ AREAS_CONECTADAS = """
     where 
         id_origem = %s;
     """
+
+NPCS_NA_AREA = """
+    SELECT DISTINCT
+        instancia_npc.id_instancia, 
+        npc.nome AS nome_npc,
+        instancia_npc.hp_atual,
+        funcao_npc.funcao
+    FROM 
+        instancia_npc
+    JOIN 
+        npc ON instancia_npc.id_npc = npc.id_npc
+    JOIN 
+        funcao_npc ON npc.funcao = funcao_npc.funcao
+    WHERE 
+        instancia_npc.id_area = %s
+        AND instancia_npc.hp_atual > 0 
+        AND NOT EXISTS (
+            SELECT 1 
+            FROM npc_morto 
+            WHERE npc_morto.id_instancia_npc = instancia_npc.id_instancia 
+            AND npc_morto.id_jogador = %s
+        )
+        AND NOT EXISTS (
+            SELECT 1 
+            FROM chefes_derrotados 
+            WHERE chefes_derrotados.id_chefe = npc.id_npc 
+            AND chefes_derrotados.id_jogador = %s
+        );
+"""
 
 INFO_ITENS_JOGADOR = """
     SELECT 
@@ -176,4 +208,3 @@ JOIN
 WHERE 
     l.inventario_jogador = %s AND e.tipo = 'Escudo';
 """
-

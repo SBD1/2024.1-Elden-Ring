@@ -8,12 +8,23 @@ def equipados(conn, id_jogador):
     while True:
         clear_screen()
         equipados = info_equipados(conn, id_jogador)
-        print(f'1. Armadura: {equipados[3]}')
-        print(f'2. Mão direita: {equipados[1]}')
-        print(f'3. Mão esquerda: {equipados[2]}')
+
+        if equipados is None:
+            armadura = "Nenhuma"
+            mao_direita = "Nenhuma"
+            mao_esquerda = "Nenhuma"
+        else:
+            armadura = equipados[3] if len(equipados) > 3 and equipados[3] else "Nenhuma"
+            mao_direita = equipados[1] if len(equipados) > 1 and equipados[1] else "Nenhuma"
+            mao_esquerda = equipados[2] if len(equipados) > 2 and equipados[2] else "Nenhuma"
+
+        print(f'1. Armadura: {armadura}')
+        print(f'2. Mão direita: {mao_direita}')
+        print(f'3. Mão esquerda: {mao_esquerda}')
         print("0. Voltar ao menu")
-        opcao = input("Digite o número de um equipamento para muda-lo: ")
-        
+
+        opcao = input("Digite o número de um equipamento para mudá-lo: ")
+
         if opcao == "0":
             break
         else:

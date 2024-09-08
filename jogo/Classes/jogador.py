@@ -19,7 +19,10 @@ class Jogador:
                  classe_nome, 
                  id_area, 
                  area_nome, 
-                 regiao_nome):
+                 regiao_nome,
+                 st_atual, 
+                 hp_atual, 
+                 runas_atuais):
         self.id_jogador = id_jogador
         self.nome_jogador = nome_jogador
         self.hp = hp
@@ -40,6 +43,9 @@ class Jogador:
         self.id_area = id_area
         self.area_nome = area_nome
         self.regiao_nome = regiao_nome
+        self.st_atual = st_atual
+        self.hp_atual = hp_atual
+        self.runas_atuais = runas_atuais
 
     @classmethod
     def from_data_base(cls, row):
@@ -63,5 +69,9 @@ class Jogador:
             classe_nome=row[16],
             id_area=row[17],
             area_nome=row[18],
-            regiao_nome=row[19]
+            regiao_nome=row[19],
+            st_atual=row[20],
+            hp_atual=row[21],
+            runas_atuais=row[22]
         )
+        
