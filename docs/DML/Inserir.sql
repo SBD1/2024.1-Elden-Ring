@@ -759,6 +759,7 @@ SELECT add_consumivel(
     p_qtd_do_efeito := 25,
     p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
 );
+
 SELECT add_consumivel(
     p_nome := 'Fígado em conserva à prova de feitiços',
     p_raridade := 2,
@@ -769,6 +770,15 @@ SELECT add_consumivel(
     p_descricao := 'Aumenta a defesa do jogador em 25 pontos por um tempo limitado.'
 );
 
+SELECT add_consumivel(
+    p_nome := 'Frasco de Lágrimas Carmesins',            
+    p_raridade := 1,                         
+    p_valor := 0,                           
+    p_tipo_item := 'Consumivel'::tipo_item,
+    p_efeito := 'RestauraHp'::tipo_efeitos,
+    p_qtd_do_efeito := 100,
+    p_descricao := 'Um frasco que restaura 30% do HP quando usado.'
+);
 
 CREATE OR REPLACE FUNCTION add_armadura(
     p_nome VARCHAR,

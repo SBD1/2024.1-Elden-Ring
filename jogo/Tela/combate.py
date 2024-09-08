@@ -18,13 +18,18 @@ def iniciar_combate(conn, jogador: Jogador):
             print("Erro ao atualizar informações do jogador.")
             break
         cur = conn.cursor()
-        cur.execute("SELECT mao_direita FROM equipados WHERE id_jogador = %s;", (jogador.id_jogador,))
-        id_arma = cur.fetchone()
-
-        if id_arma is None or id_arma[0] is None:
-            input("Você não pode lutar sem uma arma equipada na mão direita.")
+        cur.execute("SELECT mao_direita, mao_esquerda FROM equipados WHERE id_jogador = %s;", (jogador.id_jogador,))
+        resultado = cur.fetchone()
+        if resultado is None:
+            input("Nenhum equipamento foi encontrado para este jogador.")
             cur.close()
             break
+        else:
+            (id_arma, id_escudo) = resultado
+            if id_arma is None:
+                input("Você não pode lutar sem uma arma equipada na mão direita.")
+                cur.close()
+                break
         
         print("------------------")
         print(f"HP Atual: {jogador.hp_atual}")
@@ -49,31 +54,38 @@ def iniciar_combate(conn, jogador: Jogador):
                 if 1 <= escolha <= len(npcs_disponiveis):
                     npc_selecionado = npcs_disponiveis[escolha - 1]
                     v_id_instancia_npc, nome_npc, hp_atual, funcao = npc_selecionado
-                    print(f"Iniciando combate contra {nome_npc}...")
-
+                    print(f"Iniciando combate contra {nome_npc}")
+                    cur.execute("SELECT id_npc, hp_atual FROM instancia_npc WHERE id_instancia = %s;", (v_id_instancia_npc,))
+                    (v_id_npc, hp_atual) = cur.fetchone()
                     if npc_foi_derrotado(conn, jogador.id_jogador, v_id_instancia_npc):
                         print(f"{nome_npc} já foi derrotado. Você não pode atacar novamente.")
                         input()
                         continue
-                    
                     while True:
-                        # Atualiza as informações do jogador do banco de dados
-                        atualizar_stamina(conn, jogador, 20)
+                        jogador_atualizado = info_jogador(conn, jogador.id_jogador)
+                        if jogador_atualizado:
+                            jogador = Jogador.from_data_base(jogador_atualizado)
                         hp_antes = jogador.hp_atual
                         print("------------------")
-                        print(f"HP Atual: {jogador.hp_atual}")
-                        print(f"Stamina Atual: {jogador.st_atual}")
+                        print("Status do jogador")
+                        print(f"HP do jogador: {jogador.hp_atual}/{jogador.hp}")
+                        print(f"Stamina Atual: {jogador.st_atual}/{jogador.stamina}")
+                        print("------------------")
+                        print(f"Status do {nome_npc}")
+                        print(f"HP: {hp_atual}")
                         print("------------------")
                         print("Escolha sua ação:")
-                        print("1. Atacar")
-                        print("2. Esquivar")
-                        print("3. Recuperar stamina")
-                        print("4. Fugir")
+                        print("1. Atacar (-20)")
+                        print("2. Esquivar (-30)")
+                        print("3. Recuperar stamina (+30)")
+                        print("4. Defender (-50)")
+                        print("5. Curar (+30% hp)")
+                        print("6. Fugir")
                         opcao = input("Digite a ação: ")
 
                         if opcao == '1':
                             tipo_ataque = input("Ataque forte? (s/n): ").lower() == 's'
-                            ataca_com_equipamento(conn, jogador.id_jogador, v_id_instancia_npc, id_arma, tipo_ataque)  # PC ataca
+                            ataca_com_equipamento(conn, jogador.id_jogador, v_id_instancia_npc, id_arma, tipo_ataque)
                             if npc_foi_derrotado(conn, jogador.id_jogador, v_id_instancia_npc):
                                 print(f"{nome_npc} já foi derrotado. Você não pode atacar novamente.")
                                 input()
@@ -81,24 +93,69 @@ def iniciar_combate(conn, jogador: Jogador):
                             realizar_ataque(conn, v_id_instancia_npc, jogador.id_jogador, tipo_ataque)
                         elif opcao == '2':
                             if jogador.st_atual < 30:
-                                print("Stamina insuficiente para esquivar.")
+                                input("Stamina insuficiente para esquivar.")
+                                continue
                             else:
                                 jogador.st_atual -= 30
                                 atualizar_stamina(conn, jogador, -30) 
                                 if random.random() <= 0.8:
-                                    print("Você conseguiu esquivar do ataque!")
+                                    input("Você conseguiu esquivar do ataque!")
                                     continue
                                 else:
-                                    print("Falha ao esquivar. O NPC atacará!")
+                                    input("Falha ao esquivar. O NPC atacará!")
                                     realizar_ataque(conn, v_id_instancia_npc, jogador.id_jogador, True)
                         elif opcao == '3':
                             atualizar_stamina(conn, jogador, 30) 
                             realizar_ataque(conn, v_id_instancia_npc, jogador.id_jogador, True)
                         elif opcao == '4':
-                            print("Você fugiu do combate.")
-                            break
+                            if id_escudo is None:
+                                input("Não pode defender sem um escudo.")
+                                continue
+                            if jogador.st_atual < 50:
+                                input("Stamina insuficiente para defender.")
+                                continue
+                            else:
+                                atualizar_stamina(conn, jogador, -50)
+                                cur.execute("SELECT defesa FROM escudo WHERE id_escudo = %s;", (id_escudo,))
+                                defesa_escudo = cur.fetchone()[0]
+                                if defesa_escudo[0]>=100 :
+                                    input("Golpe defendido com sucesso.")
+                                else:
+                                    input("O inimigo quebrou sua guarda. Seu escudo não suporta o ataque.")
+                                    realizar_ataque(conn, v_id_instancia_npc, jogador.id_jogador, True)
+                        elif opcao == '5':
+                                cur.execute("SELECT COUNT(*) FROM localização_da_instancia_de_item WHERE inventario_jogador = %s;", (jogador.id_jogador,))
+                                contador = cur.fetchone()[0]
+                                print(f"Quantidade de Fracos de Lágrimas Carmesins: {contador}/10")
+                                if(contador<=0):
+                                    input("Não há item de cura.")
+                                    continue
+                                else:
+                                    att_hp = jogador.hp_atual + 0.3*jogador.hp
+                                    cur.execute("UPDATE jogador SET hp_atual=%s WHERE id_jogador = %s;", (att_hp, jogador.id_jogador))
+                                    cur.execute("""
+                                        SELECT id_instancia_item 
+                                        FROM localização_da_instancia_de_item 
+                                        WHERE inventario_jogador = %s 
+                                        LIMIT 1;
+                                    """, (jogador.id_jogador,))
+                                    id_instancia_item = cur.fetchone()[0]
+                                    cur.execute("DELETE FROM localização_da_instancia_de_item WHERE id_instancia_item = %s;", (id_instancia_item,))
+                                    cur.execute("DELETE FROM instancia_de_item WHERE id_instancia_item = %s;", (id_instancia_item,))
+                                    input("Um frasco de Lágrimas Carmesins foi consumido.")
+                                    continue
+                        elif opcao == '6':
+                            if funcao == "Inimigo":
+                                input("Você fugiu do combate.")
+                                break
+                            else:
+                                input("Não há como fugir.")
+                                continue
                         else:
                             print("Opção inválida.")
+                            continue
+
+                        atualizar_stamina(conn, jogador, 20)
                         jogador_atualizado = info_jogador(conn, jogador.id_jogador)
                         if jogador_atualizado:
                             jogador = Jogador.from_data_base(jogador_atualizado)
