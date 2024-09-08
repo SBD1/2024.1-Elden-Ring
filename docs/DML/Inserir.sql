@@ -1198,39 +1198,46 @@ EXECUTE FUNCTION equipamento_inicial();
 CREATE OR REPLACE FUNCTION validar_equipamentos()
 RETURNS TRIGGER AS $$
 BEGIN
-    -- Verifica se a instância do item da mão direita está associada ao jogador
+    -- Verifica se o equipamento da mão direita está no inventário do jogador
     IF NEW.mao_direita IS NOT NULL AND NOT EXISTS (
         SELECT 1
-        FROM localização_da_instancia_de_item
-        WHERE id_instancia_item = NEW.mao_direita
-          AND inventario_jogador = NEW.id_jogador
+        FROM localização_da_instancia_de_item l
+		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
+        JOIN equipamento e ON ii.id_item = e.id_equipamento
+        WHERE e.id_equipamento = NEW.mao_direita
+          AND l.inventario_jogador = NEW.id_jogador
     ) THEN
-        RAISE EXCEPTION 'Instância do item % (mão direita) não está associada ao jogador %', NEW.mao_direita, NEW.id_jogador;
+        RAISE EXCEPTION 'Equipamento % (mão direita) não está no inventário do jogador %', NEW.mao_direita, NEW.id_jogador;
     END IF;
 
-    -- Verifica se a instância do item da mão esquerda está associada ao jogador
+    -- Verifica se o equipamento da mão esquerda está no inventário do jogador
     IF NEW.mao_esquerda IS NOT NULL AND NOT EXISTS (
         SELECT 1
-        FROM localização_da_instancia_de_item
-        WHERE id_instancia_item = NEW.mao_esquerda
-          AND inventario_jogador = NEW.id_jogador
+        FROM localização_da_instancia_de_item l
+		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
+        JOIN equipamento e ON ii.id_item = e.id_equipamento
+        WHERE e.id_equipamento = NEW.mao_esquerda
+          AND l.inventario_jogador = NEW.id_jogador
     ) THEN
-        RAISE EXCEPTION 'Instância do item % (mão esquerda) não está associada ao jogador %', NEW.mao_esquerda, NEW.id_jogador;
+        RAISE EXCEPTION 'Equipamento % (mão esquerda) não está no inventário do jogador %', NEW.mao_esquerda, NEW.id_jogador;
     END IF;
 
-    -- Verifica se a instância do item de armadura está associada ao jogador
+    -- Verifica se a armadura está no inventário do jogador
     IF NEW.armadura IS NOT NULL AND NOT EXISTS (
         SELECT 1
-        FROM localização_da_instancia_de_item
-        WHERE id_instancia_item = NEW.armadura
-          AND inventario_jogador = NEW.id_jogador
+        FROM localização_da_instancia_de_item l
+		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
+        JOIN equipamento e ON ii.id_item = e.id_equipamento
+        WHERE e.id_equipamento = NEW.armadura
+          AND l.inventario_jogador = NEW.id_jogador
     ) THEN
-        RAISE EXCEPTION 'Instância do item % (armadura) não está associada ao jogador %', NEW.armadura, NEW.id_jogador;
+        RAISE EXCEPTION 'Equipamento % (armadura) não está no inventário do jogador %', NEW.armadura, NEW.id_jogador;
     END IF;
 
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
 
 DROP TRIGGER IF EXISTS trigger_validar_equipamentos ON equipados;
 CREATE TRIGGER trigger_validar_equipamentos

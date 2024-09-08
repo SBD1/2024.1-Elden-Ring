@@ -1,3 +1,4 @@
+from Database.Dml.equipados import atualizar_equipamento
 from uteis import clear_screen
 from Database.Select.equipados import equipaveis, info_equipados
 
@@ -61,14 +62,24 @@ def listar_equipaveis(conn, id_jogador, tipo_equipamento, equipados):
         if opcao == "0":
             break
         else:
-            try:
-                opcao = int(opcao)
-                if 1 <= opcao <= len(listar_equipaveis):
-                    equipamento_selecionado = listar_equipaveis[opcao - 1]
-                    # atualizar_equipamento(conn, equipamento_selecionado) 
-                else:
-                    print("Opção inválida.")
-            except ValueError:
-                print("Por favor, insira um número válido.")
+            if atualiza_equipamento(conn, id_jogador, tipo_equipamento, opcao, listar_equipaveis): break
 
-# atualizar equipamentos
+
+def atualiza_equipamento(conn, id_jogador, tipo_equipamento, opcao, listar_equipaveis):
+    try:
+        opcao = int(opcao)
+        if 1 <= opcao <= len(listar_equipaveis):
+            equipamento_selecionado = listar_equipaveis[opcao - 1]  
+            if tipo_equipamento == "Armadura": id_equipamento = equipamento_selecionado[8]
+            else: id_equipamento = equipamento_selecionado[9]
+
+            if atualizar_equipamento(conn, id_jogador, tipo_equipamento, id_equipamento):
+                print("Equipamento atualizado com sucesso.")
+                input("Precione qualquer tecla para continuar ...")
+                return True  
+            else:
+                print("Falha ao atualizar equipamento.")
+        else:
+            print("Opção inválida.")
+    except ValueError:
+        print("Por favor, insira um número válido.")
