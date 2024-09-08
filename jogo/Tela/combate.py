@@ -62,6 +62,7 @@ def iniciar_combate(conn, jogador: Jogador):
                         input()
                         continue
                     while True:
+                        atualizar_stamina(conn, jogador, 10)
                         jogador_atualizado = info_jogador(conn, jogador.id_jogador)
                         if jogador_atualizado:
                             jogador = Jogador.from_data_base(jogador_atualizado)
@@ -75,7 +76,7 @@ def iniciar_combate(conn, jogador: Jogador):
                         print(f"HP: {hp_atual}")
                         print("------------------")
                         print("Escolha sua ação:")
-                        print("1. Atacar (-20)")
+                        print("1. Atacar (-30/-20)")
                         print("2. Esquivar (-30)")
                         print("3. Recuperar stamina (+30)")
                         print("4. Defender (-50)")
@@ -96,7 +97,6 @@ def iniciar_combate(conn, jogador: Jogador):
                                 input("Stamina insuficiente para esquivar.")
                                 continue
                             else:
-                                jogador.st_atual -= 30
                                 atualizar_stamina(conn, jogador, -30) 
                                 if random.random() <= 0.8:
                                     input("Você conseguiu esquivar do ataque!")
@@ -155,12 +155,11 @@ def iniciar_combate(conn, jogador: Jogador):
                             print("Opção inválida.")
                             continue
 
-                        atualizar_stamina(conn, jogador, 20)
                         jogador_atualizado = info_jogador(conn, jogador.id_jogador)
                         if jogador_atualizado:
                             jogador = Jogador.from_data_base(jogador_atualizado)
                             
-                        if jogador.hp_atual > hp_antes:
+                        if jogador.id_area == 1:
                             print("Você renasceu no começo do jogo. Todas suas runas foram perdidas, para recuperá-las, siga para a área onde morreu.")
                             break
                         input()

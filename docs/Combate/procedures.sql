@@ -25,6 +25,7 @@ DECLARE
     v_funcao_npc funcao_p;
     v_multiplicador REAL := 1.0;
     v_drop_runas INTEGER;
+    v_decrease INTEGER;
 BEGIN
     SELECT e.tipo INTO v_tipo_equipamento
     FROM equipamento e
@@ -38,7 +39,6 @@ BEGIN
             SELECT j.forca INTO v_atributo_scaling
             FROM jogador j
             WHERE j.id_jogador = v_id_jogador;
-
         WHEN 'Leve' THEN
             SELECT a.dano, a.destreza INTO v_dano_base, v_proficiencia
             FROM arma_leve a
@@ -46,7 +46,6 @@ BEGIN
             SELECT j.destreza INTO v_atributo_scaling
             FROM jogador j
             WHERE j.id_jogador = v_id_jogador;
-
         WHEN 'Cajado' THEN
             SELECT a.dano, a.proficiencia INTO v_dano_base, v_proficiencia
             FROM cajado a
@@ -54,7 +53,6 @@ BEGIN
             SELECT j.intel INTO v_atributo_scaling
             FROM jogador j
             WHERE j.id_jogador = v_id_jogador;
-
         WHEN 'Selo' THEN
             SELECT a.dano, a.milagre INTO v_dano_base, v_proficiencia
             FROM selo a
@@ -85,18 +83,22 @@ BEGIN
     SELECT j.nivel_atual, j.st_atual INTO v_nivel_p, v_stamina_atual
     FROM jogador j
     WHERE j.id_jogador = v_id_jogador;
-
-    IF v_stamina_atual < 20 THEN
-        RAISE EXCEPTION 'Stamina insuficiente para realizar o ataque.';
-    END IF;
-
+    v_decrease := 20;
     IF v_tipo_ataque = TRUE THEN
+        v_decrease := 30;
         v_multiplicador := 1.3;
     ELSE
+        v_decrease := 20;
         v_multiplicador := 0.9;
     END IF;
-
-    v_dano_total := (v_dano_base * v_atributo_scaling * 7 + v_scaling_factor) * v_multiplicador / (v_resistencia_npc / 3);
+    IF v_stamina_atual < v_decrease THEN
+        RAISE EXCEPTION 'Stamina insuficiente para realizar o ataque.';
+    END IF;
+    UPDATE jogador
+    SET st_atual = st_atual-v_decrease
+    WHERE id_jogador = v_id_jogador;
+    
+    v_dano_total := LEAST((v_dano_base * v_atributo_scaling * 7 + v_scaling_factor) * v_multiplicador / (v_resistencia_npc / 3), v_hp_original*0.33);
 
     v_critical_hit := (random() < 0.05);
 
@@ -144,10 +146,6 @@ BEGIN
         SET hp_atual = v_hp_atual 
         WHERE id_instancia = v_id_instancia_npc;
     END IF;
-
-    UPDATE jogador
-    SET st_atual = st_atual - 20
-    WHERE id_jogador = v_id_jogador;
 END;
 $$;
 
@@ -163,6 +161,7 @@ DECLARE
     v_dano_total INTEGER;
     v_nivel_jogador INTEGER;
     v_hp_atual_jogador INTEGER;
+    v_hp_jogador INTEGER;
     v_hp_atual_npc INTEGER;
     v_nome_jogador VARCHAR(30);
     v_nome_npc VARCHAR(30);
@@ -187,19 +186,19 @@ BEGIN
         SELECT dano_base, nome INTO v_dano_base, v_nome_npc FROM chefe WHERE id_chefe = v_id_npc;
     END IF;
 
-    SELECT nivel_atual, hp_atual, nome INTO v_nivel_jogador, v_hp_atual_jogador, v_nome_jogador FROM jogador WHERE id_jogador = alvo;
+    SELECT nivel_atual, hp_atual, hp, nome INTO v_nivel_jogador, v_hp_atual_jogador, v_hp_jogador, v_nome_jogador FROM jogador WHERE id_jogador = alvo;
 
     v_chance_erro := random();
     IF v_chance_erro <= 0.2 THEN
-        RAISE NOTICE 'O ataque falhou!';
+        RAISE NOTICE 'O ataque do inimigo falhou!';
         RETURN;
     END IF;
 
 	
     IF ataque_forte THEN
-        v_dano_total := (v_dano_base * 40.3) / (v_nivel_jogador); 
+        v_dano_total := LEAST((v_dano_base * 40.3) / (v_nivel_jogador), v_hp_jogador*0.43); 
     ELSE
-        v_dano_total := (v_dano_base * 33.9) / (v_nivel_jogador); 
+        v_dano_total := LEAST((v_dano_base * 33.9) / (v_nivel_jogador), v_hp_jogador*0.33); 
     END IF;
 	IF v_balanceamento=TRUE THEN
 		v_dano_total := v_dano_total*0.8;
@@ -239,6 +238,7 @@ BEGIN
                 INSERT INTO area_de_morte (id_jogador, id_area, runas_dropadas) VALUES (NEW.id_jogador, NEW.id_area, NEW.runas_atuais);
                 NEW.runas_atuais := 0;
 				 NEW.hp_atual := OLD.hp;
+                 NEW.st_atual := OLD.stamina;
 				 NEW.id_area := 1;
             END IF;
         END IF;
