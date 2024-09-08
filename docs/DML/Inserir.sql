@@ -530,16 +530,13 @@ VALUES (true, 2, 'Grande Runa - 2', NULL, NULL);
 -- Instancia Item -> TESTAR DEPOIS QUE FIZEREM A PARTE DE AREA
 
 INSERT INTO instancia_de_item (id_item)
-VALUES (20);  
+VALUES (1);  
 
 INSERT INTO instancia_de_item (id_item)
-VALUES (5);  
+VALUES (1);  
 
 INSERT INTO instancia_de_item (id_item)
-VALUES (18);  
-
-INSERT INTO instancia_de_item (id_item)
-VALUES (22);  
+VALUES (2);  
 
 -- Instancia item está em -> 
 
