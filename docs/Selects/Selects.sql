@@ -62,7 +62,7 @@ FROM
 JOIN 
     item it ON i.id_item = it.id_item
 JOIN 
-    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+    localizacao_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
 WHERE 
     l.inventario_jogador = %ID_DO_JOGADOR%;
    
@@ -76,7 +76,7 @@ FROM
 JOIN 
     item it ON i.id_item = it.id_item
 JOIN 
-    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+    localizacao_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
 WHERE 
     l.area = %ID_DA_AREA%;
 

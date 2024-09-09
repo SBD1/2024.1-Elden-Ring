@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS instancia_de_item (
     id_item INTEGER REFERENCES item(id_item)
 );
 
-create table if not exists localização_da_instancia_de_item (
+create table if not exists localizacao_da_instancia_de_item (
 	id_instancia_item INTEGER PRIMARY KEY REFERENCES instancia_de_item(id_instancia_item),
     area INTEGER REFERENCES area(id_area),
     inventario_jogador INTEGER REFERENCES jogador(id_jogador),
