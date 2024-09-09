@@ -8,6 +8,7 @@ from Tela.combate import iniciar_combate
 from Tela.inventario import inventario
 from Tela.equipados import equipados
 from Tela.subir_nivel import subir_nivel
+from Tela.status import status
 
 def escolher_jogador(characters):
     if not characters:
@@ -82,7 +83,7 @@ def menu(conn, jogador):
         if opcao == '1':
             inventario(conn, jogador.id_jogador)
         elif opcao == '2':
-            print("Opção 'Status' selecionada.")
+            status(conn, jogador.id_jogador)
         elif opcao == '3':
             equipados(conn, jogador.id_jogador)
         elif opcao == '4':

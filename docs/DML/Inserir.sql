@@ -1311,7 +1311,7 @@ INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
 VALUES (12, 18, 4, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (13, 17, NULL, null);
+VALUES (13, 7, NULL, null);
 
 INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (14, 21, 5, null);
+VALUES (14, 20, 5, null);
