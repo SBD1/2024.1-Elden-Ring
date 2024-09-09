@@ -1227,12 +1227,12 @@ DECLARE
     instancia_nova_id2 INTEGER;
 BEGIN
     -- Insere os itens na tabela instancia_de_item
-    INSERT INTO instancia_de_item (id_item) VALUES (23);
     INSERT INTO instancia_de_item (id_item) VALUES (24);
+    INSERT INTO instancia_de_item (id_item) VALUES (25);
 
     -- Obtém os IDs das novas instâncias de item
-    SELECT id_instancia_item INTO instancia_nova_id FROM instancia_de_item WHERE id_item = 23 ORDER BY id_instancia_item DESC LIMIT 1;
-    SELECT id_instancia_item INTO instancia_nova_id2 FROM instancia_de_item WHERE id_item = 24 ORDER BY id_instancia_item DESC LIMIT 1;
+    SELECT id_instancia_item INTO instancia_nova_id FROM instancia_de_item WHERE id_item = 24 ORDER BY id_instancia_item DESC LIMIT 1;
+    SELECT id_instancia_item INTO instancia_nova_id2 FROM instancia_de_item WHERE id_item = 25 ORDER BY id_instancia_item DESC LIMIT 1;
 
     -- Insere as localizações na tabela localização_da_instancia_de_item
     INSERT INTO localização_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
@@ -1243,7 +1243,7 @@ BEGIN
 
     -- Insere os dados na tabela equipados
     INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-    VALUES (NEW.id_jogador, 23, NULL, 24);
+    VALUES (NEW.id_jogador, 24, NULL, 25);
 
     RETURN NEW;
 END;
