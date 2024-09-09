@@ -49,7 +49,7 @@ Foram feitas alterações em:
 * [Jogo Completo](https://github.com/SBD1/2024.1-Elden-Ring/tree/main/jogo) no README desta pasta tem como rodar o jogo.
 
 Apresentações:
-* [Apresentação - Criação de Personagem, inventario e equipados](https://www.youtube.com/watch?v=yNuCA3SaW54&feature=youtu.be)
+* Apresentação - Criação de Personagem, inventario e equipados[Youtube](https://www.youtube.com/watch?v=yNuCA3SaW54&feature=youtu.be) [Mp4](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/BD1%20Elden%20Ring%20-%20Cria%C3%A7%C3%A3o%20de%20Personagem%2C%20inventario%20e%20equipados.mp4)
 
 #### Ferramentas Utilizadas:
 
