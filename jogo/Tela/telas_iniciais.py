@@ -54,14 +54,14 @@ def selecionar_acao(conn, jogador_selecionado):
             print("Todos os inimigos comuns derrotados surgiram novamente.")
             cur.execute("DELETE FROM npc_morto WHERE id_jogador = %s;", (jogador.id_jogador,))
             conn.commit()
-            cur.execute("SELECT COUNT(*) FROM localização_da_instancia_de_item WHERE inventario_jogador = %s;", (jogador.id_jogador,))
+            cur.execute("SELECT COUNT(*) FROM localizacao_da_instancia_de_item WHERE inventario_jogador = %s;", (jogador.id_jogador,))
             contador = cur.fetchone()[0]
             while contador < 10:
                 cur.execute("SELECT id_item FROM item WHERE nome = 'Frasco de Lágrimas Carmesins';")
                 lagrima = cur.fetchone()[0]
                 cur.execute("INSERT INTO instancia_de_item (id_item) VALUES (%s) RETURNING id_instancia_item;", (lagrima,))
                 id_ultimo = cur.fetchone()[0]
-                cur.execute("INSERT INTO localização_da_instancia_de_item (id_instancia_item, inventario_jogador) VALUES (%s, %s);", (id_ultimo, jogador.id_jogador))
+                cur.execute("INSERT INTO localizacao_da_instancia_de_item (id_instancia_item, inventario_jogador) VALUES (%s, %s);", (id_ultimo, jogador.id_jogador))
                 contador += 1
             cur.close()
             input("Pressione qualquer tecla para continuar...")
