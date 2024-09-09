@@ -604,13 +604,13 @@ VALUES (2);
 
 -- Instancia item está em -> 
 
-INSERT INTO localização_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
+INSERT INTO localizacao_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
 VALUES (1, null, 12);  
 
-INSERT INTO localização_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
+INSERT INTO localizacao_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
 VALUES (2, null, 12); 
 
-INSERT INTO localização_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
+INSERT INTO localizacao_da_instancia_de_item(id_instancia_item, area, inventario_jogador)
 VALUES (3, 5, null); 
 
 -- Escudo
@@ -697,6 +697,8 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     v_id_arma_leve INTEGER;
+    v_id_instancia_item INTEGER;
+    v_area_random INTEGER;
 BEGIN
     -- Inserção na tabela item e captura do id_item
     WITH new_item AS (
@@ -716,6 +718,18 @@ BEGIN
     SELECT id_equipamento, p_habilidade, p_dano, p_critico, p_req_int, p_req_forca, p_req_fe, p_req_dex, p_melhoria, p_peso, p_custo_melhoria, p_destreza
     FROM new_equipamento
     RETURNING id_arma_leve INTO v_id_arma_leve;
+
+    INSERT INTO instancia_de_item (id_item)
+    VALUES (v_id_arma_leve)
+    RETURNING id_instancia_item INTO v_id_instancia_item;
+
+    SELECT id_area INTO v_area_random
+    FROM area
+    ORDER BY RANDOM()
+    LIMIT 1;
+
+    INSERT INTO localizacao_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
+    VALUES (v_id_instancia_item, v_area_random, NULL);
 
     -- Retorna o id da arma leve inserida
     RETURN v_id_arma_leve;
@@ -940,6 +954,8 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     v_id_arma_pesada INTEGER;
+    v_id_instancia_item INTEGER;
+    v_area_random INTEGER;
 BEGIN
     -- Inserção na tabela item e captura do id_item
     WITH new_item AS (
@@ -963,6 +979,18 @@ BEGIN
     -- Inserção na tabela engaste com id_arma sendo o id da arma pesada
     INSERT INTO engaste (id_arma, atributo_extra)
     VALUES (v_id_arma_pesada, p_atributo_extra);
+
+    INSERT INTO instancia_de_item (id_item)
+    VALUES (v_id_arma_pesada)
+    RETURNING id_instancia_item INTO v_id_instancia_item;
+
+    SELECT id_area INTO v_area_random
+    FROM area
+    ORDER BY RANDOM()
+    LIMIT 1;
+
+    INSERT INTO localizacao_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
+    VALUES (v_id_instancia_item, v_area_random, NULL);
 
     -- Retorna o id da arma pesada inserida
     RETURN v_id_arma_pesada;
@@ -1033,6 +1061,8 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     v_id_cajado INTEGER;
+    v_id_instancia_item INTEGER;
+    v_area_random INTEGER;
 BEGIN
     -- Inserção na tabela item e captura do id_item
     WITH new_item AS (
@@ -1056,6 +1086,18 @@ BEGIN
     -- Inserção na tabela engaste com id_arma sendo o id do cajado
     INSERT INTO engaste (id_arma, atributo_extra)
     VALUES (v_id_cajado, p_atributo_extra);
+
+    INSERT INTO instancia_de_item (id_item)
+    VALUES (v_id_cajado)
+    RETURNING id_instancia_item INTO v_id_instancia_item;
+
+    SELECT id_area INTO v_area_random
+    FROM area
+    ORDER BY RANDOM()
+    LIMIT 1;
+
+    INSERT INTO localizacao_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
+    VALUES (v_id_instancia_item, v_area_random, NULL);
 
     -- Retorna o id do cajado inserida
     RETURN v_id_cajado;
@@ -1127,6 +1169,8 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     v_id_selo INTEGER;
+    v_id_instancia_item INTEGER;
+    v_area_random INTEGER;
 BEGIN
     -- Inserção na tabela item e captura do id_item
     WITH new_item AS (
@@ -1151,6 +1195,17 @@ BEGIN
     INSERT INTO engaste (id_arma, atributo_extra)
     VALUES (v_id_selo, p_atributo_extra);
 
+    INSERT INTO instancia_de_item (id_item)
+    VALUES (v_id_selo)
+    RETURNING id_instancia_item INTO v_id_instancia_item;
+
+    SELECT id_area INTO v_area_random
+    FROM area
+    ORDER BY RANDOM()
+    LIMIT 1;
+
+    INSERT INTO localizacao_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
+    VALUES (v_id_instancia_item, v_area_random, NULL);
     -- Retorna o id do cajado inserida
     RETURN v_id_selo;
 END;
@@ -1234,11 +1289,11 @@ BEGIN
     SELECT id_instancia_item INTO instancia_nova_id FROM instancia_de_item WHERE id_item = 24 ORDER BY id_instancia_item DESC LIMIT 1;
     SELECT id_instancia_item INTO instancia_nova_id2 FROM instancia_de_item WHERE id_item = 25 ORDER BY id_instancia_item DESC LIMIT 1;
 
-    -- Insere as localizações na tabela localização_da_instancia_de_item
-    INSERT INTO localização_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
+    -- Insere as localizações na tabela localizacao_da_instancia_de_item
+    INSERT INTO localizacao_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
     VALUES (instancia_nova_id, NULL, NEW.id_jogador);
 
-    INSERT INTO localização_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
+    INSERT INTO localizacao_da_instancia_de_item (id_instancia_item, area, inventario_jogador)
     VALUES (instancia_nova_id2, NULL, NEW.id_jogador);
 
     -- Insere os dados na tabela equipados
@@ -1262,7 +1317,7 @@ BEGIN
     -- Verifica se o equipamento da mão direita está no inventário do jogador
     IF NEW.mao_direita IS NOT NULL AND NOT EXISTS (
         SELECT 1
-        FROM localização_da_instancia_de_item l
+        FROM localizacao_da_instancia_de_item l
 		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
         JOIN equipamento e ON ii.id_item = e.id_equipamento
         WHERE e.id_equipamento = NEW.mao_direita
@@ -1274,7 +1329,7 @@ BEGIN
     -- Verifica se o equipamento da mão esquerda está no inventário do jogador
     IF NEW.mao_esquerda IS NOT NULL AND NOT EXISTS (
         SELECT 1
-        FROM localização_da_instancia_de_item l
+        FROM localizacao_da_instancia_de_item l
 		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
         JOIN equipamento e ON ii.id_item = e.id_equipamento
         WHERE e.id_equipamento = NEW.mao_esquerda
@@ -1286,7 +1341,7 @@ BEGIN
     -- Verifica se a armadura está no inventário do jogador
     IF NEW.armadura IS NOT NULL AND NOT EXISTS (
         SELECT 1
-        FROM localização_da_instancia_de_item l
+        FROM localizacao_da_instancia_de_item l
 		join instancia_de_item ii on l.id_instancia_item = ii.id_instancia_item
         JOIN equipamento e ON ii.id_item = e.id_equipamento
         WHERE e.id_equipamento = NEW.armadura

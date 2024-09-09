@@ -94,7 +94,7 @@ INFO_ITENS_JOGADOR = """
     LEFT JOIN 
         equipamento e ON it.id_item = e.id_equipamento
     JOIN 
-        localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+        localizacao_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
     WHERE 
         l.inventario_jogador = %s;
 """
@@ -145,7 +145,7 @@ LEFT JOIN
 left join
 	armadura a on e.id_equipamento = a.id_armadura
 JOIN 
-    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+    localizacao_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
 WHERE 
     l.inventario_jogador = %s and e.tipo = 'Armadura';
 """
@@ -177,7 +177,7 @@ LEFT JOIN
 LEFT JOIN 
     selo se ON e.id_equipamento = se.id_selo
 JOIN 
-    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+    localizacao_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
 WHERE 
     l.inventario_jogador = %s
     AND e.tipo IN ('Leve', 'Pesada', 'Cajado', 'Selo');
@@ -204,7 +204,7 @@ LEFT JOIN
 LEFT JOIN 
     escudo es ON e.id_equipamento = es.id_escudo
 JOIN 
-    localização_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
+    localizacao_da_instancia_de_item l ON i.id_instancia_item = l.id_instancia_item
 WHERE 
     l.inventario_jogador = %s AND e.tipo = 'Escudo';
 """

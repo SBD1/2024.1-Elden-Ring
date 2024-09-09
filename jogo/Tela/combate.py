@@ -135,7 +135,7 @@ def iniciar_combate(conn, jogador: Jogador):
                                     input("O inimigo quebrou sua guarda. Seu escudo não suporta o ataque.")
                                     realizar_ataque(conn, v_id_instancia_npc, jogador.id_jogador, True)
                         elif opcao == '5':
-                                cur.execute("SELECT COUNT(*) FROM localização_da_instancia_de_item WHERE inventario_jogador = %s;", (jogador.id_jogador,))
+                                cur.execute("SELECT COUNT(*) FROM localizacao_da_instancia_de_item WHERE inventario_jogador = %s;", (jogador.id_jogador,))
                                 contador = cur.fetchone()[0]
                                 print(f"Quantidade de Fracos de Lágrimas Carmesins: {contador}/10")
                                 if(contador<=0):
@@ -147,12 +147,12 @@ def iniciar_combate(conn, jogador: Jogador):
                                     cur.execute("UPDATE jogador SET hp_atual=%s WHERE id_jogador = %s;", (att_hp, jogador.id_jogador))
                                     cur.execute("""
                                         SELECT id_instancia_item 
-                                        FROM localização_da_instancia_de_item 
+                                        FROM localizacao_da_instancia_de_item 
                                         WHERE inventario_jogador = %s 
                                         LIMIT 1;
                                     """, (jogador.id_jogador,))
                                     id_instancia_item = cur.fetchone()[0]
-                                    cur.execute("DELETE FROM localização_da_instancia_de_item WHERE id_instancia_item = %s;", (id_instancia_item,))
+                                    cur.execute("DELETE FROM localizacao_da_instancia_de_item WHERE id_instancia_item = %s;", (id_instancia_item,))
                                     cur.execute("DELETE FROM instancia_de_item WHERE id_instancia_item = %s;", (id_instancia_item,))
                                     input("Um frasco de Lágrimas Carmesins foi consumido.")
                                     continue

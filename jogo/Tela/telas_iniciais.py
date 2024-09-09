@@ -9,6 +9,7 @@ from Tela.inventario import inventario
 from Tela.equipados import equipados
 from Tela.subir_nivel import subir_nivel
 from Tela.status import status
+from Tela.collect_item import coletar_itens_na_area
 
 def escolher_jogador(characters):
     if not characters:
@@ -33,6 +34,7 @@ def selecionar_acao(conn, jogador_selecionado):
         print("2. Andar")
         print("3. Iniciar Combate")
         print("4. Descansar")
+        print("5. Explorar")
         print("0. Voltar a seleção de personagem")
         opcao = input("Digite a ação desejada:")
 
@@ -52,17 +54,19 @@ def selecionar_acao(conn, jogador_selecionado):
             print("Todos os inimigos comuns derrotados surgiram novamente.")
             cur.execute("DELETE FROM npc_morto WHERE id_jogador = %s;", (jogador.id_jogador,))
             conn.commit()
-            cur.execute("SELECT COUNT(*) FROM localização_da_instancia_de_item WHERE inventario_jogador = %s;", (jogador.id_jogador,))
+            cur.execute("SELECT COUNT(*) FROM localizacao_da_instancia_de_item WHERE inventario_jogador = %s;", (jogador.id_jogador,))
             contador = cur.fetchone()[0]
             while contador < 10:
                 cur.execute("SELECT id_item FROM item WHERE nome = 'Frasco de Lágrimas Carmesins';")
                 lagrima = cur.fetchone()[0]
                 cur.execute("INSERT INTO instancia_de_item (id_item) VALUES (%s) RETURNING id_instancia_item;", (lagrima,))
                 id_ultimo = cur.fetchone()[0]
-                cur.execute("INSERT INTO localização_da_instancia_de_item (id_instancia_item, inventario_jogador) VALUES (%s, %s);", (id_ultimo, jogador.id_jogador))
+                cur.execute("INSERT INTO localizacao_da_instancia_de_item (id_instancia_item, inventario_jogador) VALUES (%s, %s);", (id_ultimo, jogador.id_jogador))
                 contador += 1
             cur.close()
             input("Pressione qualquer tecla para continuar...")
+        elif opcao == '5':
+            coletar_itens_na_area(conn, jogador.id_jogador)
         elif opcao == '0':
             break  # Volta à seleção de personagem
         else:
@@ -77,6 +81,7 @@ def menu(conn, jogador):
         print("2. Status")
         print("3. Equipados")
         print("4. Subir de nível")
+        print("5. Explorar")
         print("0. Voltar as opções de ação")
         opcao = input("Digite à ação desejada:")
 
@@ -88,6 +93,8 @@ def menu(conn, jogador):
             equipados(conn, jogador.id_jogador)
         elif opcao == '4':
             subir_nivel(conn, jogador)
+        elif opcao == '5':
+            coletar_itens_na_area(conn, jogador.id_jogador)
         elif opcao == '0':
             break  # Volta à selecionar ação
         else:
