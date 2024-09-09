@@ -5,7 +5,7 @@ from Database.Select.jogador import listar_jogadores
 from Tela.telas_iniciais import escolher_jogador, selecionar_acao
 from Tela.novo_jogador import criar_personagem
 from uteis import clear_screen
-from Tela.historia import introducao, margitDialogo, rennalaDialogo, maleniaDialogo
+from Tela.historia import introducao
 
 global jogador_selecionado
 

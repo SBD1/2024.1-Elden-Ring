@@ -118,7 +118,7 @@ BEGIN
     IF v_hp_atual <= 0 THEN
         IF v_funcao_npc = 'Chefe' THEN
             RAISE NOTICE '% foi conquistada.', (SELECT lembranca FROM chefe WHERE v_id = chefe.id_chefe);
-			RAISE NOTICE 'Você já adquiriu mais um fragmento do Medalhão de Dectos.';
+			RAISE NOTICE 'Você adquiriu mais um fragmento do Medalhão de Dectos.';
 			RAISE NOTICE 'Você recebeu +% runas extras por derrotar um chefe.', v_drop_runas*0.8;
 			v_drop_runas := v_drop_runas*1.8;
             INSERT INTO chefes_derrotados (id_chefe, id_jogador) 
@@ -219,6 +219,8 @@ $$;
 -- CALL realizar_ataque(5, 12, FALSE);
 
 CREATE OR REPLACE FUNCTION update_jogador() RETURNS trigger AS $update_jogador$
+DECLARE
+    v_runas INTEGER;
 BEGIN
 	PERFORM * FROM jogador WHERE jogador.id_jogador = OLD.id_jogador;
 	IF NOT FOUND THEN
@@ -250,6 +252,18 @@ BEGIN
 			NEW.st_atual = LEAST(NEW.st_atual, OLD.stamina);
 		END IF;
 	END IF;
+    IF (OLD.nivel_atual <> NEW.nivel_atual) THEN
+        SELECT id_nivel, runas INTO NEW.id_nivel, v_runas FROM nivel WHERE nro_nivel = NEW.nivel_atual;
+        NEW.runas_atuais := NEW.runas_atuais - v_runas;
+        IF (OLD.vigor <> NEW.vigor) THEN
+            NEW.hp := OLD.hp + 50;
+        ELSIF (OLD.vitalidade <> NEW.vitalidade) THEN
+            NEW.stamina := OLD.stamina + 20;
+            NEW.peso_max := OLD.peso_max + 1;
+        ELSE
+            NEW.hp := OLD.hp + 10;
+        END IF;
+    END IF;
 	RETURN NEW;
 END;
 $update_jogador$ LANGUAGE plpgsql;

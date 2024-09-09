@@ -5,6 +5,7 @@ from Database.Select.jogador import atualizar_stamina, ataca_com_equipamento
 from Classes.jogador import Jogador
 from Database.Select.jogador import info_jogador
 from Database.db_connection import print_notices
+from Tela.historia import godrickDialogo, rennalaDialogo, maleniaDialogo
 
 def iniciar_combate(conn, jogador: Jogador):
     while True:
@@ -54,19 +55,29 @@ def iniciar_combate(conn, jogador: Jogador):
                 if 1 <= escolha <= len(npcs_disponiveis):
                     npc_selecionado = npcs_disponiveis[escolha - 1]
                     v_id_instancia_npc, nome_npc, hp_atual, funcao = npc_selecionado
+                    nomecmp = nome_npc.replace(" ", "")
+                    if nomecmp == "Godrick,oSenhor":
+                        print(godrickDialogo())
+                    if nomecmp == "Rennala":
+                        print(rennalaDialogo())
+                    if nomecmp == "Malenia":
+                        print(maleniaDialogo())
                     print(f"Iniciando combate contra {nome_npc}")
                     cur.execute("SELECT id_npc, hp_atual FROM instancia_npc WHERE id_instancia = %s;", (v_id_instancia_npc,))
                     (v_id_npc, hp_atual) = cur.fetchone()
+                    check=1
                     if npc_foi_derrotado(conn, jogador.id_jogador, v_id_instancia_npc):
                         print(f"{nome_npc} já foi derrotado. Você não pode atacar novamente.")
                         input()
                         continue
                     while True:
-                        atualizar_stamina(conn, jogador, 10)
+                        if check:
+                            atualizar_stamina(conn, jogador, 10)
                         jogador_atualizado = info_jogador(conn, jogador.id_jogador)
                         if jogador_atualizado:
                             jogador = Jogador.from_data_base(jogador_atualizado)
-                        hp_antes = jogador.hp_atual
+                        cur.execute("SELECT hp_atual FROM instancia_npc WHERE id_instancia = %s", (v_id_instancia_npc,))
+                        hp_atual = cur.fetchone()[0]
                         print("------------------")
                         print("Status do jogador")
                         print(f"HP do jogador: {jogador.hp_atual}/{jogador.hp}")
@@ -129,6 +140,7 @@ def iniciar_combate(conn, jogador: Jogador):
                                 print(f"Quantidade de Fracos de Lágrimas Carmesins: {contador}/10")
                                 if(contador<=0):
                                     input("Não há item de cura.")
+                                    check=0
                                     continue
                                 else:
                                     att_hp = jogador.hp_atual + 0.3*jogador.hp
