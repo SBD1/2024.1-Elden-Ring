@@ -9,6 +9,7 @@ from Tela.inventario import inventario
 from Tela.equipados import equipados
 from Tela.subir_nivel import subir_nivel
 from Tela.status import status
+from Tela.collect_item import coletar_itens_na_area
 
 def escolher_jogador(characters):
     if not characters:
@@ -33,6 +34,7 @@ def selecionar_acao(conn, jogador_selecionado):
         print("2. Andar")
         print("3. Iniciar Combate")
         print("4. Descansar")
+        print("5. Explorar")
         print("0. Voltar a seleção de personagem")
         opcao = input("Digite a ação desejada:")
 
@@ -63,6 +65,8 @@ def selecionar_acao(conn, jogador_selecionado):
                 contador += 1
             cur.close()
             input("Pressione qualquer tecla para continuar...")
+        elif opcao == '5':
+            coletar_itens_na_area(conn, jogador.id_jogador)
         elif opcao == '0':
             break  # Volta à seleção de personagem
         else:
@@ -77,6 +81,7 @@ def menu(conn, jogador):
         print("2. Status")
         print("3. Equipados")
         print("4. Subir de nível")
+        print("5. Explorar")
         print("0. Voltar as opções de ação")
         opcao = input("Digite à ação desejada:")
 
@@ -88,6 +93,8 @@ def menu(conn, jogador):
             equipados(conn, jogador.id_jogador)
         elif opcao == '4':
             subir_nivel(conn, jogador)
+        elif opcao == '5':
+            coletar_itens_na_area(conn, jogador.id_jogador)
         elif opcao == '0':
             break  # Volta à selecionar ação
         else:
