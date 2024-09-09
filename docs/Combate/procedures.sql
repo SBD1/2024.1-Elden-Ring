@@ -118,7 +118,7 @@ BEGIN
     IF v_hp_atual <= 0 THEN
         IF v_funcao_npc = 'Chefe' THEN
             RAISE NOTICE '% foi conquistada.', (SELECT lembranca FROM chefe WHERE v_id = chefe.id_chefe);
-			RAISE NOTICE 'Você já adquiriu mais um fragmento do Medalhão de Dectos.';
+			RAISE NOTICE 'Você adquiriu mais um fragmento do Medalhão de Dectos.';
 			RAISE NOTICE 'Você recebeu +% runas extras por derrotar um chefe.', v_drop_runas*0.8;
 			v_drop_runas := v_drop_runas*1.8;
             INSERT INTO chefes_derrotados (id_chefe, id_jogador) 

@@ -304,17 +304,43 @@ INSERT INTO area (nome, id_regiao) VALUES
 
 -- CONECTA AREA
 -- Primeira Região
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (1, 2); -- Ruinas Entrada para Colina Tempestuosa
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (2, 3); -- Colina Tempestuosa para Peninsula Lamentosa
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (3, 6); -- Peninsula Lamentosa para Castelo Morne
+-- Ruínas Entrada para Colina Tempestuosa
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (1, 2);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (2, 1); -- Espelho
+
+-- Colina Tempestuosa para Península Lamentosa
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (2, 3);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (3, 2); -- Espelho
+
+-- Península Lamentosa para Castelo Morne
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (3, 6);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (6, 3); -- Espelho
+
 -- Segunda Região
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (6, 11); -- Castelo Morne para Lago de Liurnia
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (11, 13); -- Lago de Liurnia para Academia Raya Lucaria
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (13, 14); -- Academia Raya Lucaria para Fortaleza Magisterio
+-- Castelo Morne para Lago de Liurnia
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (6, 11);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (11, 6); -- Espelho
+
+-- Lago de Liurnia para Academia Raya Lucaria
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (11, 13);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (13, 11); -- Espelho
+
+-- Academia Raya Lucaria para Fortaleza Magistério
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (13, 14);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (14, 13); -- Espelho
+
 -- Terceira Região
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (14, 21); -- Fortaleza Magisterio para Ruinas da Sombra
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (21, 23); -- Ruinas da Sombra para Calçada Caelid
-INSERT INTO conecta_area (id_origem, id_destino) VALUES (23, 30); -- Calçada Caelid para Fortaleza dos Condenados
+-- Fortaleza Magistério para Ruínas da Sombra
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (14, 21);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (21, 14); -- Espelho
+
+-- Ruínas da Sombra para Calçada Caelid
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (21, 23);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (23, 21); -- Espelho
+
+-- Calçada Caelid para Fortaleza dos Condenados
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (23, 30);
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (30, 23); -- Espelho
 
 -- INSTANCIA NPC 
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)

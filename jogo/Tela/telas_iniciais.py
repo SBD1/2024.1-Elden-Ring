@@ -7,6 +7,7 @@ from Tela.andar import Andar
 from Tela.combate import iniciar_combate
 from Tela.inventario import inventario
 from Tela.equipados import equipados
+from Tela.subir_nivel import subir_nivel
 
 def escolher_jogador(characters):
     if not characters:
@@ -46,7 +47,7 @@ def selecionar_acao(conn, jogador_selecionado):
         elif opcao == '4':
             print("Você descansou. Seus pontos de vida foram recuperados e seus Frascos de Lágrimas Carmesins foram restaurados.")
             cur = conn.cursor()
-            cur.execute("UPDATE jogador SET hp_atual = hp WHERE id_jogador = %s;", (jogador.id_jogador,))
+            cur.execute("UPDATE jogador SET hp_atual = hp, st_atual = stamina WHERE id_jogador = %s;", (jogador.id_jogador,))
             print("Todos os inimigos comuns derrotados surgiram novamente.")
             cur.execute("DELETE FROM npc_morto WHERE id_jogador = %s;", (jogador.id_jogador,))
             conn.commit()
@@ -74,6 +75,7 @@ def menu(conn, jogador):
         print("1. Inventario")
         print("2. Status")
         print("3. Equipados")
+        print("4. Subir de nível")
         print("0. Voltar as opções de ação")
         opcao = input("Digite à ação desejada:")
 
@@ -83,6 +85,8 @@ def menu(conn, jogador):
             print("Opção 'Status' selecionada.")
         elif opcao == '3':
             equipados(conn, jogador.id_jogador)
+        elif opcao == '4':
+            subir_nivel(conn, jogador)
         elif opcao == '0':
             break  # Volta à selecionar ação
         else:
