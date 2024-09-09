@@ -303,42 +303,78 @@ INSERT INTO area (nome, id_regiao) VALUES
 ('Jardins Montanhas', 4);
 
 -- CONECTA AREA
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (1, 2);
-
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (2, 1);
-
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (2, 3);
-
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (3, 2);
-
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (3, 4);
-
-INSERT INTO conecta_area (id_origem, id_destino)
-VALUES (4, 3);
+-- Primeira Região
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (1, 2); -- Ruinas Entrada para Colina Tempestuosa
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (2, 3); -- Colina Tempestuosa para Peninsula Lamentosa
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (3, 6); -- Peninsula Lamentosa para Castelo Morne
+-- Segunda Região
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (6, 11); -- Castelo Morne para Lago de Liurnia
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (11, 13); -- Lago de Liurnia para Academia Raya Lucaria
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (13, 14); -- Academia Raya Lucaria para Fortaleza Magisterio
+-- Terceira Região
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (14, 21); -- Fortaleza Magisterio para Ruinas da Sombra
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (21, 23); -- Ruinas da Sombra para Calçada Caelid
+INSERT INTO conecta_area (id_origem, id_destino) VALUES (23, 30); -- Calçada Caelid para Fortaleza dos Condenados
 
 -- INSTANCIA NPC 
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 1, 2, hp
-FROM npc
-WHERE id_npc = 1;
-
+SELECT 1, 2, hp FROM npc WHERE id_npc = 1;
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 2, 2, hp
-FROM npc
-WHERE id_npc = 1;
-
+SELECT 1, 2, hp FROM npc WHERE id_npc = 1;
 INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
-SELECT 2, 2, hp
-FROM npc
-WHERE id_npc = 2;
+SELECT 1, 2, hp FROM npc WHERE id_npc = 1;
 
+-- Peninsula Lamentosa
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 3, hp FROM npc WHERE id_npc = 2;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 3, hp FROM npc WHERE id_npc = 2;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 3, hp FROM npc WHERE id_npc = 2;
 
+-- Boss: Margit
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 4, 6, hp FROM npc WHERE id_npc = 4;
 
+-- Lago de Liurnia
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 3, 14, hp FROM npc WHERE id_npc = 3;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 14, hp FROM npc WHERE id_npc = 2;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 3, 14, hp FROM npc WHERE id_npc = 3;
+
+-- Academia Raya Lucaria
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 13, hp FROM npc WHERE id_npc = 2;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 1, 13, hp FROM npc WHERE id_npc = 1;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 3, 13, hp FROM npc WHERE id_npc = 3;
+
+-- Boss: Rennala
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 6, 14, hp FROM npc WHERE id_npc = 6;
+
+-- Ruinas da Sombra
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 3, 21, hp FROM npc WHERE id_npc = 3;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 3, 21, hp FROM npc WHERE id_npc = 3;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 3, 18, hp FROM npc WHERE id_npc = 3;
+
+-- Calçada Caelid
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 23, hp FROM npc WHERE id_npc = 2;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 23, hp FROM npc WHERE id_npc = 2;
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 2, 23, hp FROM npc WHERE id_npc = 2;
+
+-- Boss: Malenia
+INSERT INTO instancia_npc (id_npc, id_area, hp_atual)
+SELECT 8, 30, hp FROM npc WHERE id_npc = 8;
 
 -- CLASSE
 ---- classes
@@ -674,16 +710,6 @@ SELECT add_arma_leve(
     'Esp. Amaldi. de Morgott', 5, 1200, 'Equipamento'::tipo_item, 'Leve'::tipo_equipamento,
     1, 15, 1, 16, 0, 6.5, 8, 140, 120, 100, 'B'::tipo_proficiencia
 ) AS id_arma_leve;
-
--- EQUIPADOS -> SO PODE SER TESTADO DEPOIS DE COLOCAR O JOGADORES E TODOS EQUIPAMENTOS
-INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (12, 18, 4, null);
-
-INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (13, 17, NULL, null);
-
-INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
-VALUES (14, 21, 5, null);
 
 -- CONSUMIVEIS
 
@@ -1253,3 +1279,13 @@ CREATE TRIGGER trigger_validar_equipamentos
 BEFORE UPDATE ON equipados
 FOR EACH ROW
 EXECUTE FUNCTION validar_equipamentos();
+
+-- EQUIPADOS -> SO PODE SER TESTADO DEPOIS DE COLOCAR O JOGADORES E TODOS EQUIPAMENTOS
+INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
+VALUES (12, 18, 4, null);
+
+INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
+VALUES (13, 17, NULL, null);
+
+INSERT INTO equipados (id_jogador, mao_direita, mao_esquerda, armadura)
+VALUES (14, 21, 5, null);
