@@ -39,6 +39,17 @@ Maurício Serrano.
 * [Jogo Inicio (Andar pelo mapa)](https://github.com/SBD1/2024.1-Elden-Ring/tree/main/jogo)
 * [Apresentação](https://youtu.be/8GZPNs6pBgc)
 
+[![My Skills](https://skillicons.dev/icons?i=postgresql,python&theme=light)](https://skillicons.dev)
+
+### 3ª Entrega 
+Foram feitas alterações em:
+* [Insert (DML)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DML/Inserir.sql)
+* [Criação das Tabeças (DDL)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DDL/ddl1.0.sql)
+
+* [Jogo Completo](https://github.com/SBD1/2024.1-Elden-Ring/tree/main/jogo) no README desta pasta tem como rodar o jogo.
+
+Apresentações:
+* [Apresentação - Criação de Personagem, inventario e equipados](https://www.youtube.com/watch?v=yNuCA3SaW54&feature=youtu.be)
 
 #### Ferramentas Utilizadas:
 
