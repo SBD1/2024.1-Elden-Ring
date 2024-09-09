@@ -67,20 +67,20 @@ def formatar_atributos_jogador(atributos, dano_arma, defesa_escudo, defesa):
     _______________________ATRIBUTOS_____________________________
 
     |    Jogador: {atributos['nome']} Classe: {atributos['id_classe']}
+    |    Nível: {atributos['nivel_atual']}  
+    |    HP: {atributos['hp_atual']}/{atributos['hp']} 
+    |    Stamina: {atributos['stamina']}/{atributos['st_atual']}
+    |    MP: {atributos['mp']}   
     |    Vigor: {atributos['vigor']}                              
     |    Inteligencia: {atributos['intel']}                              
     |    Fé: {atributos['fe']}                              
     |    Destreza: {atributos['destreza']}                              
-    |    Forca: {atributos['forca']}                              
-    |    Peso Máximo: {atributos['peso_max']}                              
-    |    Stamina: {atributos['stamina']}                              
-    |    Nível: {atributos['nivel_atual']}                              
-    |    HP: {atributos['hp_atual']} / {atributos['hp']}                              
-    |    MP Máximo: {atributos['mp']}         
+    |    Forca: {atributos['forca']}                                                                                                                                                         
 
     __________________________BODY_____________________________
 
-    |    Vitalidade: {atributos['vitalidade']}     
+    |    Vitalidade: {atributos['vitalidade']}
+    |    Peso Máximo: {atributos['peso_max']}     
 
     __________________________DEFESA___________________________
 
@@ -88,7 +88,7 @@ def formatar_atributos_jogador(atributos, dano_arma, defesa_escudo, defesa):
 
     __________________________ATAQUE___________________________
 
-    |    Dano: {dano_arma}
-    |    Defesa: {defesa_escudo}                                                            
+    |    Dano da arma: {dano_arma}
+    |    Defesa do escudo: {defesa_escudo}                                                            
 
     """
