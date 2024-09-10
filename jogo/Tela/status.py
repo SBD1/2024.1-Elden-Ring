@@ -69,7 +69,7 @@ def formatar_atributos_jogador(atributos, dano_arma, defesa_escudo, defesa):
     |    Jogador: {atributos['nome']} Classe: {atributos['id_classe']}
     |    Nível: {atributos['nivel_atual']}  
     |    HP: {atributos['hp_atual']}/{atributos['hp']} 
-    |    Stamina: {atributos['stamina']}/{atributos['st_atual']}
+    |    Stamina: {atributos['st_atual']}/{atributos['stamina']}
     |    MP: {atributos['mp']}   
     |    Vigor: {atributos['vigor']}                              
     |    Inteligencia: {atributos['intel']}                              

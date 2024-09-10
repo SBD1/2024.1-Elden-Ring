@@ -94,7 +94,7 @@ def iniciar_combate(conn, jogador: Jogador):
                         print("5. Curar (+30% hp)")
                         print("6. Fugir")
                         opcao = input("Digite a ação: ")
-
+                        check=1
                         if opcao == '1':
                             tipo_ataque = input("Ataque forte? (s/n): ").lower() == 's'
                             ataca_com_equipamento(conn, jogador.id_jogador, v_id_instancia_npc, id_arma, tipo_ataque)
@@ -106,6 +106,7 @@ def iniciar_combate(conn, jogador: Jogador):
                         elif opcao == '2':
                             if jogador.st_atual < 30:
                                 input("Stamina insuficiente para esquivar.")
+                                check=0
                                 continue
                             else:
                                 atualizar_stamina(conn, jogador, -30) 
@@ -121,15 +122,17 @@ def iniciar_combate(conn, jogador: Jogador):
                         elif opcao == '4':
                             if id_escudo is None:
                                 input("Não pode defender sem um escudo.")
+                                check=0
                                 continue
                             if jogador.st_atual < 50:
                                 input("Stamina insuficiente para defender.")
+                                check=0
                                 continue
                             else:
                                 atualizar_stamina(conn, jogador, -50)
                                 cur.execute("SELECT defesa FROM escudo WHERE id_escudo = %s;", (id_escudo,))
                                 defesa_escudo = cur.fetchone()[0]
-                                if defesa_escudo[0]>=100 :
+                                if defesa_escudo>=100 :
                                     input("Golpe defendido com sucesso.")
                                 else:
                                     input("O inimigo quebrou sua guarda. Seu escudo não suporta o ataque.")

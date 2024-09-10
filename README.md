@@ -44,12 +44,16 @@ Maurício Serrano.
 ### 3ª Entrega 
 Foram feitas alterações em:
 * [Insert (DML)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DML/Inserir.sql)
-* [Criação das Tabeças (DDL)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DDL/ddl1.0.sql)
+* [Criação das Tabelas (DDL)](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/docs/DDL/ddl1.0.sql)
 
 * [Jogo Completo](https://github.com/SBD1/2024.1-Elden-Ring/tree/main/jogo) no README desta pasta tem como rodar o jogo.
+* [Triggers e SPs](docs/Triggers-SPs)
 
 Apresentações:
-* Apresentação - Criação de Personagem, inventario e equipados [Youtube](https://www.youtube.com/watch?v=yNuCA3SaW54&feature=youtu.be) / [Mp4](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/BD1%20Elden%20Ring%20-%20Cria%C3%A7%C3%A3o%20de%20Personagem%2C%20inventario%20e%20equipados.mp4)
+* Apresentação Final completa - [Youtube](https://youtu.be/kPRpKOofSFU) / [MP4](apresentacao-modulo3.7z)
+* Criação de Personagem, inventário e equipados [Youtube](https://www.youtube.com/watch?v=yNuCA3SaW54&feature=youtu.be) / [Mp4](https://github.com/SBD1/2024.1-Elden-Ring/blob/main/BD1%20Elden%20Ring%20-%20Cria%C3%A7%C3%A3o%20de%20Personagem%2C%20inventario%20e%20equipados.mp4)
+* [História, combate e subir de nível](historia-combate-lvl-up.mp4)
+* [Exploração e status do jogador](exploracao-status.mp4)
 
 #### Ferramentas Utilizadas:
 

@@ -19,7 +19,7 @@
 
 3. Alimente e ajuste as tabelas do seu banco de dados
 
-    Para isso, execute o script `docs/DML/Inserir.sql` e depois  `docs/Combate/procedures.sql`.
+    Para isso, execute o script `docs/DML/Inserir.sql` e depois  `docs/Triggers-SPs/trigger-sps.sql`.
 
 ### Parte 2 - Configurando o Arquivo de Conexão com o Banco de Dados
 
