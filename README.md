@@ -59,6 +59,51 @@ Apresentações:
 
 [![My Skills](https://skillicons.dev/icons?i=postgresql,python&theme=light)](https://skillicons.dev)
 
+## Configurações do Banco
+
+1. Instale o Alembic
+
+```bash
+# Atualizar a lista de pacotes
+sudo apt update
+
+# Instalar Python e pip
+sudo apt install python3 python3-pip
+
+# Instalar o Alembic usando pip
+pip3 install alembic
+
+# Verificar a instalação do Alembic
+alembic --version
+``` 
+
+2. Atualize o arquivo env.py com suas credenciais do postgres
+OBS.: Crie um novo banco e não esqueça de trocar "database_name" pelo nome do banco que você criou. O username e a password são as suas credenciais do postgres
+
+```bash
+config.set_main_option('sqlalchemy.url', 'postgresql+psycopg2://username:password@localhost:5432/database_name')
+```
+
+3. Atualize o arquivo env.py com suas credenciais do postgres
+
+```bash
+sqlalchemy.url = postgresql+psycopg2://username:password@localhost:5432/database_name
+```
+
+## Para realizar novas migrações
+
+1. Atualize o arquivo models de acordo com o que você precisa
+2. Gere uma nova versão 
+
+```bash
+alembic revision --autogenerate -m "descricao"
+```
+
+3. Realize a migração
+
+```bash
+alembic upgrade head
+```
 
 </div>
 
